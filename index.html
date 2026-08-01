@@ -45,6 +45,10 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); display
 .nav-item:hover { color:var(--text); background:#f5f5f5; }
 .nav-item.active { color:var(--text); background:#f5f5f5; border-left-color:#1a1a1a; font-weight:600; }
 .nav-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.nav-divider { height:1px; background:#eee; margin:8px 14px; }
+.nav-data-btns { display:flex; flex-direction:column; gap:4px; padding:0 14px; }
+.nav-data-btn { font-size:11px; padding:6px 8px; border:1px solid var(--border); border-radius:var(--radius-sm); background:#fff; color:var(--text2); cursor:pointer; text-align:center; transition:all .15s; }
+.nav-data-btn:hover { background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
 
 /* main */
 .main { margin-left:var(--sidebar-w); flex:1; padding:32px 40px; max-width:960px; }
@@ -205,6 +209,8 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
   .sidebar.expanded .sidebar-logo span { display:block; }
   .sidebar.expanded .nav-item { padding:12px 20px; font-size:14px; }
   .sidebar.expanded .nav-dot { width:8px; height:8px; }
+  .sidebar.expanded .nav-data-btns { padding:0 20px; }
+  .sidebar.expanded .nav-data-btn { font-size:13px; padding:8px; }
   .sidebar-overlay { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.3); z-index:99; }
   .sidebar-overlay.show { display:block; }
 }
@@ -274,6 +280,12 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
   <div class="nav-item" data-page="english"><span class="nav-dot" style="background:#0d9488"></span>英语口语</div>
   <div class="nav-item" data-page="korean"><span class="nav-dot" style="background:#4338ca"></span>韩语学习</div>
   <div class="nav-item" data-page="schedule"><span class="nav-dot" style="background:#be185d"></span>档期管理</div>
+  <div class="nav-divider"></div>
+  <div class="nav-data-btns">
+    <button class="nav-data-btn" onclick="exportData()">导出数据</button>
+    <button class="nav-data-btn" onclick="document.getElementById('importFile').click()">导入数据</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
 </nav>
 
 <!-- Main Content -->
@@ -489,6 +501,53 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 const STORAGE_KEY = 'abai_ws_';
 function load(k, d) { try { const v = localStorage.getItem(STORAGE_KEY+k); return v ? JSON.parse(v) : d; } catch(e) { return d; } }
 function save(k, v) { localStorage.setItem(STORAGE_KEY+k, JSON.stringify(v)); }
+
+// ============ EXPORT / IMPORT ============
+function exportData() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(STORAGE_KEY)) {
+      data[key] = localStorage.getItem(key);
+    }
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'abai-workstation-' + today() + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!confirm('导入将覆盖当前所有数据，确定继续吗？')) return;
+      // Clear existing
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(STORAGE_KEY)) keysToRemove.push(key);
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
+      // Import new
+      Object.keys(data).forEach(key => {
+        if (key.startsWith(STORAGE_KEY)) localStorage.setItem(key, data[key]);
+      });
+      alert('导入成功！页面将刷新。');
+      location.reload();
+    } catch(err) {
+      alert('导入失败：文件格式不正确');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
 
 function today() { return new Date().toISOString().split('T')[0]; }
 function now() { const d=new Date(); return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'); }
