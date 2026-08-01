@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="阿白工作台">
+<meta name="apple-mobile-web-app-title" content="白">
 <title>阿白工作台</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%231a1a1a'/><text x='256' y='340' font-size='320' font-weight='bold' fill='white' text-anchor='middle' font-family='sans-serif'>白</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%231a1a1a'/><text x='256' y='340' font-size='320' font-weight='bold' fill='white' text-anchor='middle' font-family='sans-serif'>白</text></svg>">
 <style>
 :root {
   --bg: #fafafa;
@@ -28,20 +30,21 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:var(--font); background:var(--bg); color:var(--text); display:flex; min-height:100vh; -webkit-tap-highlight-color:transparent; }
 
-/* sidebar */
+/* sidebar - light bg with black border */
 .sidebar {
-  width:var(--sidebar-w); background:#1a1a1a; color:#fff; position:fixed; top:0; left:0; bottom:0;
+  width:var(--sidebar-w); background:#fff; color:var(--text); position:fixed; top:0; left:0; bottom:0;
   display:flex; flex-direction:column; z-index:100; padding:24px 0 16px; overflow-y:auto;
+  border-right:1.5px solid #1a1a1a;
 }
-.sidebar-logo { padding:0 20px 24px; font-size:18px; font-weight:700; letter-spacing:1px; border-bottom:1px solid #333; margin-bottom:8px; }
-.sidebar-logo span { font-size:12px; font-weight:400; color:#888; display:block; margin-top:2px; }
+.sidebar-logo { padding:0 20px 24px; font-size:18px; font-weight:700; letter-spacing:1px; border-bottom:1px solid #eee; margin-bottom:8px; }
+.sidebar-logo span { font-size:11px; font-weight:400; color:var(--text3); display:block; margin-top:2px; letter-spacing:2px; }
 .nav-item {
-  display:flex; align-items:center; gap:10px; padding:11px 20px; cursor:pointer; font-size:14px;
-  color:#999; transition:all .15s; border-left:3px solid transparent; margin:2px 0;
+  display:flex; align-items:center; gap:10px; padding:12px 20px; cursor:pointer; font-size:14px;
+  color:var(--text2); transition:all .15s; border-left:3px solid transparent; margin:1px 0;
 }
-.nav-item:hover { color:#fff; background:rgba(255,255,255,0.04); }
-.nav-item.active { color:#fff; background:rgba(255,255,255,0.08); border-left-color:#fff; }
-.nav-item .icon { font-size:18px; width:24px; text-align:center; }
+.nav-item:hover { color:var(--text); background:#f5f5f5; }
+.nav-item.active { color:var(--text); background:#f5f5f5; border-left-color:#1a1a1a; font-weight:600; }
+.nav-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 
 /* main */
 .main { margin-left:var(--sidebar-w); flex:1; padding:32px 40px; max-width:960px; }
@@ -54,6 +57,7 @@ h1 { font-size:26px; font-weight:700; margin-bottom:4px; }
 h2 { font-size:18px; font-weight:600; margin-bottom:16px; }
 h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 .subtitle { color:var(--text2); font-size:13px; margin-bottom:28px; }
+.page-tag { font-size:12px; color:var(--text3); }
 
 /* cards */
 .card { background:var(--card); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); margin-bottom:16px; border:1px solid var(--border); }
@@ -70,7 +74,6 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 .task-input-row { display:flex; gap:8px; margin-bottom:12px; }
 .task-input-row input { flex:1; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:14px; font-family:var(--font); outline:none; transition:border .15s; }
 .task-input-row input:focus { border-color:var(--accent); }
-.task-input-row select { padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; font-family:var(--font); background:#fff; outline:none; }
 .btn { padding:10px 18px; border:none; border-radius:var(--radius-sm); font-size:13px; font-family:var(--font); cursor:pointer; font-weight:600; transition:all .15s; }
 .btn-dark { background:var(--accent); color:#fff; }
 .btn-dark:hover { background:var(--accent2); }
@@ -89,6 +92,7 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 .task-item .task-cat { font-size:11px; padding:2px 8px; border-radius:10px; background:#f0f0f0; color:var(--text2); }
 .task-item .del-btn { background:none; border:none; color:#ccc; cursor:pointer; font-size:16px; padding:2px 6px; }
 .task-item .del-btn:hover { color:var(--danger); }
+.task-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
 /* knowledge */
 .knowledge-list { max-height:300px; overflow-y:auto; }
@@ -104,6 +108,11 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 .sport-video .link-btn { font-size:12px; color:var(--accent); text-decoration:none; white-space:nowrap; padding:6px 10px; border-radius:var(--radius-sm); border:1px solid var(--border); }
 .sport-video .link-btn:hover { background:var(--accent); color:#fff; }
 .sport-video.done { opacity:0.5; }
+
+/* play button */
+.play-btn { display:inline-flex; align-items:center; gap:4px; background:#1a1a1a; color:#fff; border:none; border-radius:20px; padding:5px 12px; font-size:12px; cursor:pointer; font-family:var(--font); transition:all .15s; }
+.play-btn:hover { background:#333; }
+.play-btn.playing { background:#27ae60; }
 
 /* korean */
 .kr-progress { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
@@ -126,6 +135,10 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 .en-card .en-text { font-size:14px; line-height:1.8; color:var(--text); margin-bottom:8px; }
 .en-card .en-vocab { font-size:12px; color:var(--text2); line-height:1.6; }
 .en-card .en-vocab b { color:var(--text); }
+.en-line { display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #eee; }
+.en-line:last-child { border-bottom:none; }
+.en-line .en-orig { flex:1; font-size:14px; line-height:1.6; }
+.en-line .en-trans { font-size:12px; color:var(--text2); margin-top:2px; }
 
 /* inspiration / hotspot */
 .inspo-card { border-left:3px solid var(--accent); padding-left:12px; margin-bottom:12px; }
@@ -134,13 +147,30 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 .inspo-card .angle { font-size:13px; margin:4px 0; }
 .inspo-card .title-dy, .inspo-card .title-xhs { font-size:12px; padding:2px 6px; background:#f0f0f0; border-radius:4px; display:inline-block; margin:2px 4px 2px 0; }
 .inspo-card .script { font-size:12px; color:var(--text2); margin-top:4px; background:#fafafa; padding:8px; border-radius:4px; }
+.inspo-row { display:flex; gap:8px; margin:6px 0; font-size:13px; line-height:1.6; }
+.inspo-label { flex-shrink:0; width:72px; font-size:11px; color:var(--text3); padding-top:2px; }
+.inspo-val { flex:1; color:var(--text2); }
 
 /* review */
 .review-input { width:100%; min-height:100px; padding:12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font); font-size:14px; resize:vertical; margin-bottom:8px; outline:none; }
 .review-input:focus { border-color:var(--accent); }
-.review-list .review-item { padding:12px; border-bottom:1px solid #f0f0f0; font-size:13px; }
-.review-item .rv-date { font-size:11px; color:var(--text3); }
-.review-item .rv-content { margin-top:4px; line-height:1.6; }
+.stats-form { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+@media(max-width:600px) { .stats-form { grid-template-columns:1fr; } }
+.stats-platform { border:1px solid var(--border); border-radius:8px; padding:12px; }
+.stats-platform-title { font-weight:700; font-size:14px; margin-bottom:10px; }
+.stats-field { display:flex; flex-direction:column; margin-bottom:8px; }
+.stats-field label { font-size:11px; color:var(--text3); margin-bottom:3px; }
+.stats-field input { width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:15px; font-family:var(--font); outline:none; }
+.stats-field input:focus { border-color:var(--accent); }
+.stats-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid #f0f0f0; }
+@media(max-width:600px) { .stats-summary { grid-template-columns:repeat(2,1fr); } }
+.stats-sum-item { text-align:center; }
+.stats-sum-label { display:block; font-size:11px; color:var(--text3); margin-bottom:2px; }
+.stats-sum-val { font-size:20px; font-weight:700; }
+.stats-history-item { padding:12px; border-bottom:1px solid #f0f0f0; }
+.stats-h-date { font-weight:600; font-size:13px; margin-bottom:4px; }
+.stats-h-row { font-size:12px; color:var(--text2); margin:2px 0; }
+.stats-h-tag { display:inline-block; width:36px; font-weight:600; }
 
 /* clock */
 .clock-row { display:flex; align-items:center; gap:16px; margin-bottom:8px; }
@@ -159,23 +189,22 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 .tab-content.active { display:block; animation:fadeIn .2s; }
 
 @media(max-width:768px) {
-  .sidebar { width:56px; padding:16px 0 16px; }
-  .sidebar-logo { padding:0 8px 16px; font-size:13px; text-align:center; }
+  .sidebar { width:120px; padding:16px 0 16px; }
+  .sidebar-logo { padding:0 12px 16px; font-size:14px; text-align:left; }
   .sidebar-logo span { display:none; }
-  .nav-item { padding:12px 8px; justify-content:center; font-size:0; border-left:none; border-bottom:2px solid transparent; }
-  .nav-item .icon { font-size:20px; margin:0; }
-  .main { margin-left:56px; padding:16px; max-width:100%; }
+  .nav-item { padding:12px 12px; justify-content:flex-start; font-size:12px; border-left:3px solid transparent; border-bottom:none; gap:6px; }
+  .nav-dot { width:7px; height:7px; }
+  .main { margin-left:120px; padding:16px; max-width:100%; }
   .stats-row { grid-template-columns:repeat(2,1fr); }
   .clock-time { font-size:36px; }
   .hamburger { display:flex; }
   h1 { font-size:20px; }
 
-  /* expanded sidebar overlay on mobile */
   .sidebar.expanded { width:var(--sidebar-w); }
   .sidebar.expanded .sidebar-logo { padding:0 20px 24px; font-size:18px; text-align:left; }
   .sidebar.expanded .sidebar-logo span { display:block; }
-  .sidebar.expanded .nav-item { padding:11px 20px; justify-content:flex-start; font-size:14px; border-left:3px solid transparent; border-bottom:none; }
-  .sidebar.expanded .nav-item .icon { font-size:18px; margin-right:6px; }
+  .sidebar.expanded .nav-item { padding:12px 20px; font-size:14px; }
+  .sidebar.expanded .nav-dot { width:8px; height:8px; }
   .sidebar-overlay { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.3); z-index:99; }
   .sidebar-overlay.show { display:block; }
 }
@@ -188,12 +217,45 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 .modal-overlay.show { display:flex; }
 .modal { background:#fff; border-radius:var(--radius); padding:24px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; }
 .modal h3 { margin-bottom:12px; }
-.modal textarea { width:100%; min-height:80px; padding:10px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font); font-size:13px; outline:none; resize:vertical; }
+.modal textarea { width:100%; min-height:240px; padding:12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font); font-size:14px; line-height:1.6; outline:none; resize:vertical; }
+.modal input { width:100%; padding:10px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font); font-size:14px; outline:none; }
+.modal input:focus, .modal textarea:focus { border-color:var(--accent); }
 .modal .btn-row { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
 
 /* progress bar */
 .progress-bar { height:6px; background:#eee; border-radius:3px; margin-top:6px; overflow:hidden; }
 .progress-bar .fill { height:100%; background:var(--accent); border-radius:3px; transition:width .3s; }
+
+/* calendar */
+.cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.cal-header h2 { margin:0; font-size:18px; }
+.cal-nav { display:flex; gap:8px; }
+.cal-weekdays { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; margin-bottom:4px; }
+.cal-weekday { font-size:11px; color:var(--text3); padding:4px 0; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+.cal-cell { aspect-ratio:1; padding:3px; border-radius:6px; cursor:pointer; display:flex; flex-direction:column; justify-content:flex-start; border:1px solid transparent; transition:all .15s; position:relative; min-height:48px; overflow:hidden; }
+.cal-cell:hover { background:#f5f5f5; border-color:var(--border); }
+.cal-cell.other-month { opacity:0.3; }
+.cal-cell.today { background:#f5f5f5; border-color:var(--accent); }
+.cal-day-num { font-size:13px; font-weight:600; }
+.cal-day-num.jiri { color:#dc2626; }
+.cal-lunar { font-size:9px; color:var(--text3); margin-top:1px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cal-lunar.jiri { color:#dc2626; font-weight:600; }
+.cal-cell.booked { background:#e8f5e9; border-color:#27ae60; }
+.cal-cell.booked .cal-day-num { color:#27ae60; }
+.cal-booked-dot { position:absolute; top:3px; right:3px; width:5px; height:5px; border-radius:50%; background:#27ae60; }
+.cal-legend { display:flex; gap:14px; margin-top:16px; font-size:11px; color:var(--text2); flex-wrap:wrap; }
+.cal-legend-item { display:flex; align-items:center; gap:4px; }
+.cal-legend-dot { width:8px; height:8px; border-radius:50%; }
+.cal-booking-item { display:flex; justify-content:space-between; align-items:center; padding:12px; background:#fafafa; border-radius:8px; margin-bottom:8px; cursor:pointer; border-left:3px solid #27ae60; }
+.cal-booking-item:hover { background:#f0f0f0; }
+.cal-booking-date { font-weight:600; font-size:14px; }
+.cal-booking-date.jiri { color:#dc2626; }
+.cal-booking-addr { font-size:12px; color:var(--text2); margin-top:2px; }
+.cal-booking-card { padding:14px; background:#fafafa; border-radius:8px; margin-bottom:10px; cursor:pointer; border-left:3px solid #27ae60; }
+.cal-booking-card:hover { background:#f0f0f0; }
+.cal-booking-detail { font-size:13px; margin:4px 0; line-height:1.6; }
+.cal-booking-label { display:inline-block; width:40px; font-size:11px; color:var(--text3); }
 
 /* PWA install hint */
 .install-hint { background:#1a1a1a; color:#fff; padding:12px 16px; border-radius:var(--radius-sm); font-size:12px; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
@@ -205,15 +267,14 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
 <!-- Sidebar -->
 <nav class="sidebar">
   <div class="sidebar-logo">阿白工作台<span>CHENGDU · WEDDING</span></div>
-  <div class="nav-item active" data-page="home"><span class="icon">🏠</span>首页概览</div>
-  <div class="nav-item" data-page="plan"><span class="icon">📋</span>每日计划</div>
-  <div class="nav-item" data-page="inspiration"><span class="icon">💡</span>选题灵感</div>
-  <div class="nav-item" data-page="hotspot"><span class="icon">🔥</span>爆款热点</div>
-  <div class="nav-item" data-page="review"><span class="icon">📊</span>内容复盘</div>
-  <div class="nav-item" data-page="sport"><span class="icon">🏃</span>运动打卡</div>
-  <div class="nav-item" data-page="english"><span class="icon">🇬🇧</span>英语口语</div>
-  <div class="nav-item" data-page="korean"><span class="icon">🇰🇷</span>韩语学习</div>
-  <div class="nav-item" data-page="infj"><span class="icon">□</span>INFJ角落</div>
+  <div class="nav-item active" data-page="home"><span class="nav-dot" style="background:#1a1a1a"></span>首页概览</div>
+  <div class="nav-item" data-page="plan"><span class="nav-dot" style="background:#2563eb"></span>每日计划</div>
+  <div class="nav-item" data-page="inspiration"><span class="nav-dot" style="background:#7c3aed"></span>选题灵感</div>
+  <div class="nav-item" data-page="review"><span class="nav-dot" style="background:#16a34a"></span>数据统计</div>
+  <div class="nav-item" data-page="sport"><span class="nav-dot" style="background:#ea580c"></span>运动打卡</div>
+  <div class="nav-item" data-page="english"><span class="nav-dot" style="background:#0d9488"></span>英语口语</div>
+  <div class="nav-item" data-page="korean"><span class="nav-dot" style="background:#4338ca"></span>韩语学习</div>
+  <div class="nav-item" data-page="schedule"><span class="nav-dot" style="background:#be185d"></span>档期管理</div>
 </nav>
 
 <!-- Main Content -->
@@ -222,7 +283,7 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
   <!-- HOME -->
   <div class="page active" id="page-home">
     <div class="install-hint" id="installHint" style="display:none">
-      💡 添加到手机桌面，像App一样使用 <button onclick="dismissHint()">知道了</button>
+      添加到手机桌面，像App一样使用 <button onclick="dismissHint()">知道了</button>
     </div>
     <div class="clock-row">
       <div class="clock-time" id="clockTime">--:--</div>
@@ -233,8 +294,15 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
       <h2>今日概览</h2>
       <div class="stats-row" id="homeStats"></div>
       <div class="card">
-        <div class="card-header"><h3>快速待办</h3></div>
-        <div id="homeQuickTasks"></div>
+        <div class="card-header"><h3>今日任务</h3><span class="page-tag">日课 + 待办</span></div>
+        <div id="homeTodayTasks"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>添加今日待办</h3></div>
+        <div class="task-input-row">
+          <input type="text" id="homeTaskInput" placeholder="输入任务后回车添加...">
+          <button class="btn btn-dark" onclick="addHomeTask()">添加</button>
+        </div>
       </div>
     </div>
   </div>
@@ -243,31 +311,14 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
   <div class="page" id="page-plan">
     <h1>每日计划</h1>
     <div class="tabs">
-      <div class="tab active" data-tab="tab-today">今日概览</div>
-      <div class="tab" data-tab="tab-daily">个人日常</div>
+      <div class="tab active" data-tab="tab-daily">个人日常</div>
       <div class="tab" data-tab="tab-grow">提升积累</div>
     </div>
 
-    <div class="tab-content active" id="tab-today">
-      <div class="stats-row" id="planStats"></div>
-      <div class="card">
-        <div class="card-header"><h3>今日任务</h3></div>
-        <div class="task-input-row">
-          <input type="text" id="taskInput" placeholder="添加新任务...">
-          <select id="taskCat">
-            <option value="创作">创作</option>
-            <option value="个人">个人</option>
-            <option value="提升">提升</option>
-          </select>
-          <button class="btn btn-dark" onclick="addTask()">添加</button>
-        </div>
-        <div id="taskList"></div>
-      </div>
-    </div>
-
-    <div class="tab-content" id="tab-daily">
+    <div class="tab-content active" id="tab-daily">
       <div class="card">
         <h3>雷打不动的日课</h3>
+        <p style="font-size:12px;color:var(--text3);margin-bottom:12px">每天固定要完成的事，在首页可直接打勾</p>
         <div id="dailyRoutines"></div>
       </div>
     </div>
@@ -276,55 +327,67 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
       <div class="card">
         <div class="card-header"><h3>摄影知识碎片</h3><button class="btn btn-outline btn-sm" onclick="openKnowledgeModal()">+ 添加</button></div>
         <div class="knowledge-list" id="knowledgeList"></div>
-        <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="exportKnowledge()">📋 查看全部整理</button>
+        <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="exportKnowledge()">查看全部整理</button>
       </div>
       <div class="card" id="knowledgeExport" style="display:none">
-        <div class="card-header"><h3>📚 知识整理汇总</h3><button class="btn btn-outline btn-sm" onclick="document.getElementById('knowledgeExport').style.display='none'">收起</button></div>
+        <div class="card-header"><h3>知识整理汇总</h3><button class="btn btn-outline btn-sm" onclick="document.getElementById('knowledgeExport').style.display='none'">收起</button></div>
         <div id="knowledgeExportContent"></div>
       </div>
     </div>
   </div>
 
-  <!-- INSPIRATION -->
+  <!-- INSPIRATION (merged with hotspot) -->
   <div class="page" id="page-inspiration">
     <h1>选题灵感</h1>
-    <p class="subtitle">婚礼跟拍行业热门选题 & 二创分析</p>
+    <p class="subtitle">爆款热点 → 二创方向 · 每日更新</p>
+    <div id="inspoList"></div>
     <div class="card">
-      <div class="card-header"><h3>💡 今日推荐选题</h3><span style="font-size:12px;color:var(--text3)" id="inspoDate"></span></div>
-      <div id="inspoList"></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><h3>✏️ 手动添加灵感</h3></div>
+      <div class="card-header"><h3>手动添加灵感</h3></div>
       <textarea class="review-input" id="inspoNote" placeholder="记录灵感来源链接和你的想法..."></textarea>
       <button class="btn btn-dark btn-sm" onclick="saveInspoNote()">保存</button>
       <div id="inspoNotes" style="margin-top:12px"></div>
     </div>
   </div>
 
-  <!-- HOTSPOT -->
-  <div class="page" id="page-hotspot">
-    <h1>爆款热点</h1>
-    <p class="subtitle">结合婚礼行业热点 · 二创参考</p>
-    <div id="hotspotList"></div>
-  </div>
-
-  <!-- REVIEW -->
+  <!-- DATA STATS -->
   <div class="page" id="page-review">
-    <h1>内容复盘</h1>
+    <h1>数据统计</h1>
+    <p class="subtitle">小红书 · 抖音 · 微信 · 成交</p>
     <div class="card">
-      <h3>📝 今日复盘</h3>
-      <textarea class="review-input" id="reviewInput" placeholder="今天发布了什么内容？数据如何？有什么收获和不足？"></textarea>
-      <button class="btn btn-dark" onclick="saveReview()">保存复盘</button>
+      <div class="card-header"><h3>今日数据</h3><span class="page-tag" id="statsDate"></span></div>
+      <div class="stats-form">
+        <div class="stats-platform">
+          <div class="stats-platform-title" style="color:#e74c3c">小红书</div>
+          <div class="stats-field"><label>私信数</label><input type="number" id="xhsDm" min="0" value="0"></div>
+          <div class="stats-field"><label>点赞收藏数</label><input type="number" id="xhsLikes" min="0" value="0"></div>
+          <div class="stats-field"><label>涨粉数</label><input type="number" id="xhsFans" min="0" value="0"></div>
+        </div>
+        <div class="stats-platform">
+          <div class="stats-platform-title" style="color:#000">抖音</div>
+          <div class="stats-field"><label>私信数</label><input type="number" id="dyDm" min="0" value="0"></div>
+          <div class="stats-field"><label>点赞收藏数</label><input type="number" id="dyLikes" min="0" value="0"></div>
+          <div class="stats-field"><label>涨粉数</label><input type="number" id="dyFans" min="0" value="0"></div>
+        </div>
+        <div class="stats-platform">
+          <div class="stats-platform-title" style="color:#07c160">微信加友数</div>
+          <div class="stats-field"><label>新增好友</label><input type="number" id="wechatAdd" min="0" value="0"></div>
+        </div>
+        <div class="stats-platform">
+          <div class="stats-platform-title" style="color:#f39c12">成交单数</div>
+          <div class="stats-field"><label>今日成交</label><input type="number" id="deals" min="0" value="0"></div>
+        </div>
+      </div>
+      <button class="btn btn-dark" onclick="saveStats()">保存数据</button>
     </div>
     <div class="card">
-      <h3>📜 历史复盘</h3>
-      <div class="review-list" id="reviewList"></div>
+      <div class="card-header"><h3>历史记录</h3></div>
+      <div id="statsHistory"></div>
     </div>
   </div>
 
   <!-- SPORT -->
   <div class="page" id="page-sport">
-    <h1>运动打卡 💪</h1>
+    <h1>运动打卡</h1>
     <p class="subtitle" id="sportDate"></p>
     <div id="sportList"></div>
   </div>
@@ -332,61 +395,58 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
   <!-- ENGLISH -->
   <div class="page" id="page-english">
     <h1>英语口语</h1>
-    <p class="subtitle">每日一段 · 朗读 + 词解</p>
+    <p class="subtitle">经典美剧 · 日常口语 · 一键播放跟读</p>
     <div id="englishContent"></div>
   </div>
 
   <!-- KOREAN -->
   <div class="page" id="page-korean">
-    <h1>韩语学习 🇰🇷</h1>
-    <p class="subtitle">从零开始 · 每日半小时</p>
+    <h1>韩语学习</h1>
+    <p class="subtitle">从零开始 · 每日半小时 · 附标准读音</p>
     <div class="kr-progress" id="krProgress"></div>
     <div class="kr-content" id="krContent"></div>
     <div style="margin-top:12px;display:flex;gap:8px;">
-      <button class="btn btn-dark btn-sm" onclick="markKoreanDone()">✅ 完成今日学习</button>
-      <button class="btn btn-outline btn-sm" id="krPrevBtn" onclick="krPrevDay()">← 前一天</button>
-      <button class="btn btn-outline btn-sm" id="krNextBtn" onclick="krNextDay()">后一天 →</button>
+      <button class="btn btn-dark btn-sm" onclick="markKoreanDone()">完成今日学习</button>
+      <button class="btn btn-outline btn-sm" id="krPrevBtn" onclick="krPrevDay()">前一天</button>
+      <button class="btn btn-outline btn-sm" id="krNextBtn" onclick="krNextDay()">后一天</button>
     </div>
   </div>
 
-  <!-- INFJ -->
-  <div class="page" id="page-infj">
-    <h1>□ INFJ 角落</h1>
-    <p class="subtitle">属于自己的精神自留地</p>
-
+  <!-- SCHEDULE -->
+  <div class="page" id="page-schedule">
+    <h1>档期管理</h1>
+    <p class="subtitle">农历 · 嫁娶吉日 · 已定档期</p>
     <div class="card">
-      <div class="card-header"><h3>💡 醍醐灌顶</h3><button class="btn btn-outline btn-sm" onclick="openInfjModal('insight')">+ 添加</button></div>
-      <p style="font-size:12px;color:var(--text3);margin-bottom:8px">那些让你心头一颤的观点、句子、领悟</p>
-      <div id="infjInsights"></div>
+      <div class="cal-header">
+        <button class="btn btn-outline btn-sm" onclick="calPrevMonth()">‹ 上月</button>
+        <h2 id="calMonthTitle"></h2>
+        <button class="btn btn-outline btn-sm" onclick="calNextMonth()">下月 ›</button>
+        <button class="btn btn-dark btn-sm" id="toggleAllBtn" onclick="toggleAllBookings()" style="margin-left:auto">📋 全部档期</button>
+      </div>
+      <div id="calView">
+        <div class="cal-weekdays">
+          <div class="cal-weekday">日</div><div class="cal-weekday">一</div><div class="cal-weekday">二</div>
+          <div class="cal-weekday">三</div><div class="cal-weekday">四</div><div class="cal-weekday">五</div><div class="cal-weekday">六</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <div class="cal-legend-item"><span class="cal-legend-dot" style="background:#dc2626"></span>嫁娶吉日</div>
+          <div class="cal-legend-item"><span class="cal-legend-dot" style="background:#27ae60"></span>已定档</div>
+          <div class="cal-legend-item"><span class="cal-legend-dot" style="background:#1a1a1a;border:2px solid #1a1a1a"></span>今天</div>
+        </div>
+      </div>
+      <div id="allBookingsView" style="display:none">
+        <div id="allBookingsList"></div>
+      </div>
     </div>
-
-    <div class="card">
-      <div class="card-header"><h3>🌍 想去的地方</h3><button class="btn btn-outline btn-sm" onclick="openInfjModal('travel')">+ 添加</button></div>
-      <div id="infjTravel"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><h3>🎯 想做的事情</h3><button class="btn btn-outline btn-sm" onclick="openInfjModal('todo')">+ 添加</button></div>
-      <div id="infjTodos"></div>
+    <div class="card" id="currentMonthBookingsCard">
+      <div class="card-header"><h3>已定档期</h3></div>
+      <div id="calBookings"></div>
     </div>
   </div>
 
 </div>
-
-<!-- Sidebar overlay for mobile -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-
-<!-- INFJ Modal -->
-<div class="modal-overlay" id="infjModal">
-  <div class="modal">
-    <h3 id="infjModalTitle"></h3>
-    <textarea id="infjInput" placeholder="写下你想记录的..."></textarea>
-    <div class="btn-row">
-      <button class="btn btn-outline btn-sm" onclick="closeInfjModal()">取消</button>
-      <button class="btn btn-dark btn-sm" onclick="addInfj()">保存</button>
-    </div>
-  </div>
-</div>
 
 <!-- Knowledge Modal -->
 <div class="modal-overlay" id="knowledgeModal">
@@ -396,6 +456,31 @@ h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
     <div class="btn-row">
       <button class="btn btn-outline btn-sm" onclick="closeKnowledgeModal()">取消</button>
       <button class="btn btn-dark btn-sm" onclick="addKnowledge()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Booking Modal -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <h3 id="bookingModalTitle"></h3>
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">拍摄地址</label>
+      <input type="text" id="bookingAddr" placeholder="婚礼场地地址..." style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--font);outline:none">
+    </div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">拍摄时间</label>
+      <input type="text" id="bookingTime" placeholder="如：全天 / 上午仪式+下午外景" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--font);outline:none">
+    </div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">拍摄注意事项</label>
+      <textarea id="bookingNotes" placeholder="新人特殊要求、机位安排、器材准备等..."></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-danger btn-sm" id="bookingDelBtn" onclick="deleteBooking()" style="display:none">删除档期</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-outline btn-sm" onclick="closeBookingModal()">取消</button>
+      <button class="btn btn-dark btn-sm" onclick="saveBooking()">保存</button>
     </div>
   </div>
 </div>
@@ -416,6 +501,58 @@ let sportDone = load('sportDone', {});
 let koreanDay = load('koreanDay', 1);
 let koreanDoneDays = load('koreanDoneDays', []);
 let inspoNotes = load('inspoNotes', []);
+let routineDone = load('routineDone', {});
+
+// ============ DAILY ROUTINES ============
+const dailyRoutines = [
+  { id:'korean', text:'韩语学习 30分钟', color:'#4338ca' },
+  { id:'english', text:'英语口语练习', color:'#0d9488' },
+  { id:'photo', text:'看一课时婚礼摄影课', color:'#7c3aed' },
+  { id:'sport', text:'运动打卡', color:'#ea580c' },
+  { id:'reading', text:'每日阅读10分钟', color:'#16a34a' },
+];
+
+function getRoutineDoneToday() {
+  const td = today();
+  if(!routineDone[td]) routineDone[td] = [];
+  return routineDone[td];
+}
+
+function toggleRoutine(id) {
+  const td = today();
+  if(!routineDone[td]) routineDone[td] = [];
+  const idx = routineDone[td].indexOf(id);
+  if(idx>=0) routineDone[td].splice(idx,1);
+  else routineDone[td].push(id);
+  save('routineDone', routineDone);
+  renderHome();
+  renderPlan();
+}
+
+// ============ TEXT TO SPEECH ============
+let currentUtterance = null;
+function speak(text, lang, btn) {
+  if(!('speechSynthesis' in window)) { alert('浏览器不支持语音播放'); return; }
+  window.speechSynthesis.cancel();
+  // toggle off if same button
+  if(currentUtterance === text) {
+    currentUtterance = null;
+    if(btn) { btn.classList.remove('playing'); btn.innerHTML = '▶ 播放'; }
+    return;
+  }
+  currentUtterance = text;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang || 'en-US';
+  u.rate = 0.85;
+  u.onend = () => {
+    currentUtterance = null;
+    if(btn) { btn.classList.remove('playing'); btn.innerHTML = '▶ 播放'; }
+  };
+  window.speechSynthesis.speak(u);
+  if(btn) { btn.classList.add('playing'); btn.innerHTML = '⏸ 播放中'; }
+}
+
+function speakKorean(text, btn) { speak(text, 'ko-KR', btn); }
 
 // ============ NAVIGATION ============
 function navigate(page) {
@@ -428,12 +565,11 @@ function navigate(page) {
   if(page==='home') renderHome();
   if(page==='plan') renderPlan();
   if(page==='inspiration') renderInspiration();
-  if(page==='hotspot') renderHotspot();
-  if(page==='review') renderReview();
+  if(page==='review') renderStats();
   if(page==='sport') renderSport();
   if(page==='english') renderEnglish();
   if(page==='korean') renderKorean();
-  if(page==='infj') renderInfj();
+  if(page==='schedule') renderSchedule();
 }
 
 function toggleSidebar() {
@@ -451,7 +587,6 @@ function collapseSidebar() {
 }
 
 document.querySelectorAll('.nav-item').forEach(el=>el.addEventListener('click',()=>navigate(el.dataset.page)));
-// sidebar tap to expand on mobile
 document.querySelector('.sidebar').addEventListener('click', function(e) {
   if(window.innerWidth<=768 && !this.classList.contains('expanded') && !e.target.closest('.nav-item')) {
     toggleSidebar();
@@ -502,94 +637,93 @@ function dismissHint() {
 // ============ HOME ============
 function renderHome() {
   const td = today();
+  const doneRoutines = getRoutineDoneToday();
+  const routineTotal = dailyRoutines.length;
+  const routineDoneCount = dailyRoutines.filter(r=>doneRoutines.includes(r.id)).length;
+
   const todayTasks = tasks.filter(t=>t.date===td);
-  const done = todayTasks.filter(t=>t.done).length;
-  const total = todayTasks.length;
+  const taskDone = todayTasks.filter(t=>t.done).length;
+  const taskTotal = todayTasks.length;
+
+  const total = routineTotal + taskTotal;
+  const done = routineDoneCount + taskDone;
   const pct = total>0 ? Math.round(done/total*100) : 0;
+
   document.getElementById('homeStats').innerHTML = `
     <div class="stat-card"><div class="num">${total}</div><div class="label">今日任务</div></div>
     <div class="stat-card"><div class="num">${done}</div><div class="label">已完成</div></div>
     <div class="stat-card"><div class="num">${total-done}</div><div class="label">待完成</div></div>
     <div class="stat-card"><div class="num">${pct}%</div><div class="label">完成率</div></div>
   `;
-  const undone = todayTasks.filter(t=>!t.done);
-  document.getElementById('homeQuickTasks').innerHTML = undone.length===0
-    ? '<div class="empty">🎉 今日任务全部完成！</div>'
-    : undone.map(t=>`<div class="task-item"><input type="checkbox" onchange="toggleTask(${t.id})"><span class="task-text">${esc(t.text)}</span><span class="task-cat">${esc(t.cat)}</span></div>`).join('');
+
+  // routine tasks
+  let html = dailyRoutines.map(r=>{
+    const isDone = doneRoutines.includes(r.id);
+    return `<div class="task-item">
+      <input type="checkbox" ${isDone?'checked':''} onchange="toggleRoutine('${r.id}')">
+      <span class="task-dot" style="background:${r.color}"></span>
+      <span class="task-text ${isDone?'done':''}">${r.text}</span>
+      <span class="task-cat">日课</span>
+    </div>`;
+  }).join('');
+
+  // custom tasks
+  html += todayTasks.map(t=>`
+    <div class="task-item">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
+      <span class="task-text ${t.done?'done':''}">${esc(t.text)}</span>
+      <span class="task-cat">${esc(t.cat)}</span>
+      <button class="del-btn" onclick="deleteTask(${t.id})">×</button>
+    </div>`).join('');
+
+  if(total===0) html = '<div class="empty">今天还没有任务</div>';
+
+  document.getElementById('homeTodayTasks').innerHTML = html;
+}
+
+// home task input
+document.addEventListener('DOMContentLoaded', ()=>{
+  const inp = document.getElementById('homeTaskInput');
+  if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') addHomeTask(); });
+});
+
+function addHomeTask() {
+  const input = document.getElementById('homeTaskInput');
+  const text = input.value.trim();
+  if(!text) return;
+  tasks.push({ id:++taskIdCounter, date:today(), text, cat:'待办', done:false });
+  input.value = '';
+  save('taskIdCounter', taskIdCounter);
+  save('tasks', tasks);
+  renderHome();
 }
 
 // ============ TASKS ============
 let taskIdCounter = load('taskIdCounter', 0);
 
-function addTask() {
-  const input = document.getElementById('taskInput');
-  const text = input.value.trim();
-  if(!text) return;
-  const cat = document.getElementById('taskCat').value;
-  tasks.push({ id:++taskIdCounter, date:today(), text, cat, done:false });
-  input.value = '';
-  save('taskIdCounter', taskIdCounter);
-  save('tasks', tasks);
-  renderPlan();
-  renderHome();
-}
-
 function toggleTask(id) {
   const t = tasks.find(t=>t.id===id);
   if(t) { t.done=!t.done; save('tasks', tasks); }
-  renderPlan();
   renderHome();
 }
 
 function deleteTask(id) {
   tasks = tasks.filter(t=>t.id!==id);
   save('tasks', tasks);
-  renderPlan();
   renderHome();
 }
 
 function renderPlan() {
-  const td = today();
-  const todayTasks = tasks.filter(t=>t.date===td);
-  const done = todayTasks.filter(t=>t.done).length;
-  const total = todayTasks.length;
-  const pct = total>0 ? Math.round(done/total*100) : 0;
-
-  document.getElementById('planStats').innerHTML = `
-    <div class="stat-card"><div class="num">${total}</div><div class="label">今日任务</div></div>
-    <div class="stat-card"><div class="num">${done}</div><div class="label">已完成</div></div>
-    <div class="stat-card"><div class="num">${total-done}</div><div class="label">待完成</div></div>
-    <div class="stat-card"><div class="num">${pct}%</div><div class="label">完成率</div>
-      <div class="progress-bar" style="margin-top:8px"><div class="fill" style="width:${pct}%"></div></div>
-    </div>
-  `;
-
-  document.getElementById('taskList').innerHTML = todayTasks.length===0
-    ? '<div class="empty">还没有任务，添加一个吧</div>'
-    : todayTasks.map(t=>`
-      <div class="task-item">
-        <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
-        <span class="task-text ${t.done?'done':''}">${esc(t.text)}</span>
-        <span class="task-cat">${esc(t.cat)}</span>
-        <button class="del-btn" onclick="deleteTask(${t.id})">×</button>
-      </div>`).join('');
-
-  // daily routines
-  document.getElementById('dailyRoutines').innerHTML = `
-    <div class="task-item">
-      <span class="task-text">🇰🇷 韩语学习 30分钟</span>
+  const doneRoutines = getRoutineDoneToday();
+  document.getElementById('dailyRoutines').innerHTML = dailyRoutines.map(r=>{
+    const isDone = doneRoutines.includes(r.id);
+    return `<div class="task-item">
+      <input type="checkbox" ${isDone?'checked':''} onchange="toggleRoutine('${r.id}')">
+      <span class="task-dot" style="background:${r.color}"></span>
+      <span class="task-text ${isDone?'done':''}">${r.text}</span>
       <span class="task-cat">日课</span>
-    </div>
-    <div class="task-item">
-      <span class="task-text">🇬🇧 英语口语练习</span>
-      <span class="task-cat">日课</span>
-    </div>
-    <div class="task-item">
-      <span class="task-text">📷 看一课时婚礼摄影课</span>
-      <span class="task-cat">日课</span>
-    </div>
-  `;
-
+    </div>`;
+  }).join('');
   renderKnowledge();
 }
 
@@ -608,6 +742,7 @@ function deleteKnowledge(idx) { knowledge.splice(idx,1); save('knowledge', knowl
 
 function renderKnowledge() {
   const list = document.getElementById('knowledgeList');
+  if(!list) return;
   list.innerHTML = knowledge.length===0
     ? '<div class="empty">开始记录吧，每天一个小知识点</div>'
     : knowledge.slice(0,20).map((k,i)=>`
@@ -627,7 +762,7 @@ function exportKnowledge() {
   knowledge.forEach(k=>{ if(!byDate[k.date]) byDate[k.date]=[]; byDate[k.date].push(k.text); });
   document.getElementById('knowledgeExportContent').innerHTML = Object.entries(byDate).sort((a,b)=>b[0].localeCompare(a[0])).map(([d,items])=>`
     <div style="margin-bottom:12px">
-      <div style="font-weight:600;font-size:13px;margin-bottom:4px">📅 ${d}</div>
+      <div style="font-weight:600;font-size:13px;margin-bottom:4px">${d}</div>
       ${items.map(t=>`<div style="font-size:13px;padding:4px 0 4px 12px;border-left:2px solid #ddd;margin-bottom:4px">• ${esc(t)}</div>`).join('')}
     </div>
   `).join('') || '<div class="empty">还没有记录</div>';
@@ -665,41 +800,148 @@ function toggleSport(id) {
   else sportDone[td].push(id);
   save('sportDone', sportDone);
   renderSport();
+  renderHome();
 }
 
 // ============ ENGLISH ============
 const englishLessons = [
-  { title:'Friends · 老友记 S1E1 经典开头', source:'美剧片段', text:`Monica: There's nothing to tell! He's just some guy I work with!
-Joey: C'mon, you're going out with the guy. There's gotta be something wrong with him!
-Chandler: All right Joey, be nice. So does he have a hump? A hump and a hairpiece?`, vocab:'go out with = 和...约会 | gotta be = 肯定有 (got to be) | hump = 驼背 | hairpiece = 假发' },
-  { title:'TED · The Power of Vulnerability', source:'TED演讲', text:`"Vulnerability is the birthplace of innovation, creativity and change. To create is to make something that has never existed before. There's nothing more vulnerable than that." — Brené Brown`, vocab:'vulnerability = 脆弱性 | birthplace = 发源地 | innovation = 创新' },
-  { title:'Modern Family · 摩登家庭 经典台词', source:'美剧片段', text:`Phil: "When life gives you lemonade, make lemons. Life will be all like, 'What?!'"
-Claire: "I'm not a regular mom, I'm a cool mom."
-Gloria: "In my culture, we celebrate life. Every day is a gift."`, vocab:'lemonade = 柠檬水 | regular = 普通的 | culture = 文化 | celebrate = 庆祝' },
-  { title:'TED · How Great Leaders Inspire Action', source:'TED演讲', text:`"People don't buy what you do; they buy why you do it. And what you do simply proves what you believe." — Simon Sinek`, vocab:'simply = 仅仅 | prove = 证明 | believe = 相信' },
-  { title:'The Pursuit of Happyness · 当幸福来敲门', source:'电影片段', text:`"Don't ever let somebody tell you you can't do something. Not even me. You got a dream, you gotta protect it. People can't do something themselves, they wanna tell you you can't do it."`, vocab:'pursuit = 追求 | protect = 保护' },
-  { title:'BBC News · Daily English', source:'新闻片段', text:`"Good morning. Today's top story: Communities around the world are finding new ways to connect through art and culture. From street murals to online exhibitions, creativity is bringing people together in unexpected ways."`, vocab:'community = 社区 | connect = 连接 | mural = 壁画 | exhibition = 展览 | unexpected = 意想不到的' },
-  { title:'TED · The Happiness Advantage', source:'TED演讲', text:`"If you can raise somebody's level of positivity in the present, then their brain experiences what we now call a happiness advantage. Your brain at positive performs significantly better than at negative, neutral or stressed."`, vocab:'positivity = 积极性 | significantly = 显著地 | neutral = 中性的 | perform = 表现' },
+  { title:'Friends · 老友记 S1E1', source:'经典美剧 · 日常寒暄',
+    lines:[
+      { en:"There's nothing to tell! He's just some guy I work with!", zh:"没什么好说的！他就是我的一个同事！" },
+      { en:"C'mon, you're going out with the guy. There's gotta be something wrong with him!", zh:"拜托，你都在和他约会了。他肯定有什么问题！" },
+      { en:"All right Joey, be nice. So does he have a hump? A hump and a hairpiece?", zh:"好了Joey，嘴巴放干净点。他是驼背吗？驼背还戴假发？" },
+    ],
+    vocab:'go out with = 和...约会 | gotta = got to = 肯定 | hump = 驼背 | hairpiece = 假发 | be nice = 友好点' },
+
+  { title:'Friends · 老友记 · 点咖啡', source:'经典美剧 · 日常生活',
+    lines:[
+      { en:"Can I get a cappuccino to go, please?", zh:"请给我一杯外带卡布奇诺好吗？" },
+      { en:"Sure, what size?", zh:"好的，要什么杯型？" },
+      { en:"Large. And can I get an extra shot?", zh:"大杯。可以多加一份浓缩吗？" },
+      { en:"No problem. That'll be five fifty.", zh:"没问题。一共五块五。" },
+    ],
+    vocab:'cappuccino = 卡布奇诺 | to go = 外带 | extra shot = 多加一份浓缩 | size = 杯型 | large = 大杯' },
+
+  { title:'How I Met Your Mother · 约朋友出去玩', source:'经典美剧 · 约会社交',
+    lines:[
+      { en:"Hey, you wanna grab dinner tonight?", zh:"嘿，今晚想一起吃晚饭吗？" },
+      { en:"Sure! What are you in the mood for?", zh:"好啊！你想吃什么？" },
+      { en:"How about that new Italian place?", zh:"那家新开的意大利餐厅怎么样？" },
+      { en:"Sounds great. Let's meet at seven.", zh:"听起来不错。七点见吧。" },
+    ],
+    vocab:'grab dinner = 一起吃晚饭 | in the mood for = 想吃什么 | how about = ...怎么样 | sounds great = 听起来不错' },
+
+  { title:'Modern Family · 聊工作', source:'经典美剧 · 聊天话题',
+    lines:[
+      { en:"So, what do you do?", zh:"那么，你是做什么工作的？" },
+      { en:"I'm a photographer. I shoot weddings mostly.", zh:"我是摄影师，主要拍婚礼。" },
+      { en:"Oh that's amazing! You must see so many beautiful moments.", zh:"太棒了！你一定见过很多美好的瞬间。" },
+      { en:"Yeah, it's pretty special. Every wedding is different.", zh:"是的，很特别。每场婚礼都不一样。" },
+    ],
+    vocab:"what do you do = 你做什么工作（日常问职业）| photographer = 摄影师 | shoot weddings = 拍婚礼 | amazing = 太棒了 | pretty special = 很特别" },
+
+  { title:'The Office · 职场日常', source:'经典美剧 · 办公室对话',
+    lines:[
+      { en:"Did you get my email about the meeting?", zh:"你收到我关于会议的邮件了吗？" },
+      { en:"Yeah, I saw it. I'll get back to you this afternoon.", zh:"看到了。我下午回复你。" },
+      { en:"No rush. Just let me know before end of day.", zh:"不急。今天下班前告诉我就行。" },
+      { en:"Will do. Thanks!", zh:"没问题。谢谢！" },
+    ],
+    vocab:"get my email = 收到我的邮件 | get back to you = 回复你 | no rush = 不急 | end of day = 今天下班前 | will do = 没问题" },
+
+  { title:'Friends · 买东西', source:'经典美剧 · 购物场景',
+    lines:[
+      { en:"Excuse me, how much is this?", zh:"请问，这个多少钱？" },
+      { en:"That's forty dollars.", zh:"四十美元。" },
+      { en:"Do you take card?", zh:"你们刷卡吗？" },
+      { en:"Sure, cash or card, either is fine.", zh:"当然，现金或刷卡都可以。" },
+    ],
+    vocab:"excuse me = 请问/打扰一下 | how much = 多少钱 | take card = 可以刷卡 | cash = 现金 | either is fine = 都可以" },
+
+  { title:'Big Bang Theory · 夸奖别人', source:'经典美剧 · 社交赞美',
+    lines:[
+      { en:"You look really nice today!", zh:"你今天看起来真好看！" },
+      { en:"Oh, thank you! That's so sweet of you.", zh:"谢谢！你真会说话。" },
+      { en:"I love your outfit. Where did you get it?", zh:"我喜欢你这身衣服。在哪买的？" },
+      { en:"Oh this? I got it online. It was on sale.", zh:"这个吗？网上买的。打折的时候。" },
+    ],
+    vocab:"look nice = 看起来好看 | sweet of you = 你真好 | outfit = 这身衣服 | on sale = 打折" },
+
+  { title:'Brooklyn Nine-Nine · 表达意见', source:'经典美剧 · 日常讨论',
+    lines:[
+      { en:"What do you think about the plan?", zh:"你觉得这个计划怎么样？" },
+      { en:"I think it's a great idea. But we need more time.", zh:"我觉得是个好主意。但我们需要更多时间。" },
+      { en:"Fair enough. How about we push it to next week?", zh:"有道理。不如推到下周？" },
+      { en:"Yeah, that works. Let's do it.", zh:"行，可以。就这么定了。" },
+    ],
+    vocab:"what do you think = 你觉得呢 | great idea = 好主意 | fair enough = 有道理 | push it to = 推到 | that works = 可以" },
+
+  { title:'Modern Family · 道歉和解释', source:'经典美剧 · 日常沟通',
+    lines:[
+      { en:"Hey, I'm really sorry I'm late. The traffic was crazy.", zh:"真的很抱歉我迟到了。交通太疯狂了。" },
+      { en:"No worries. I just got here myself.", zh:"没事。我也刚到。" },
+      { en:"Did you wait long?", zh:"你等很久了吗？" },
+      { en:"Just a few minutes. Shall we get started?", zh:"就几分钟。我们开始吧？" },
+    ],
+    vocab:"I'm sorry I'm late = 抱歉我迟到了 | traffic = 交通 | no worries = 没事/别担心 | shall we = 我们...吧 | get started = 开始" },
+
+  { title:'How I Met Your Mother · 周末计划', source:'经典美剧 · 闲聊日常',
+    lines:[
+      { en:"Any plans for the weekend?", zh:"周末有什么计划吗？" },
+      { en:"Not really. Just gonna stay home and relax. You?", zh:"没什么。就待在家休息。你呢？" },
+      { en:"I'm thinking about going to the beach. Wanna come?", zh:"我想去海边。要一起吗？" },
+      { en:"That sounds awesome! Count me in!", zh:"太棒了！算我一个！" },
+    ],
+    vocab:"any plans = 有什么计划吗 | not really = 没什么 | gonna = going to = 打算 | relax = 休息放松 | wanna come = 要一起吗 | count me in = 算我一个" },
+
+  { title:'Friends · 在餐厅', source:'经典美剧 · 点餐场景',
+    lines:[
+      { en:"Are you ready to order?", zh:"您准备好点餐了吗？" },
+      { en:"Yeah, I'll have the steak, medium rare please.", zh:"好的，我要一份牛排，三分熟。" },
+      { en:"Would you like anything to drink?", zh:"您想喝点什么吗？" },
+      { en:"Just water is fine. Thank you.", zh:"白水就好。谢谢。" },
+    ],
+    vocab:"ready to order = 准备好点餐了 | I'll have = 我要... | medium rare = 三分熟 | anything to drink = 喝什么 | just water = 白水就好" },
+
+  { title:'The Office · 请求帮助', source:'经典美剧 · 职场沟通',
+    lines:[
+      { en:"Hey, could you help me with something?", zh:"嘿，你能帮我个忙吗？" },
+      { en:"Sure, what do you need?", zh:"当然，你需要什么？" },
+      { en:"I can't figure out this spreadsheet. Can you take a look?", zh:"我搞不定这个表格。你能看看吗？" },
+      { en:"No problem. Let me grab my laptop.", zh:"没问题。我拿一下电脑。" },
+    ],
+    vocab:"could you help me = 你能帮我吗 | figure out = 搞定/弄明白 | take a look = 看一下 | spreadsheet = 表格 | no problem = 没问题" },
 ];
 
 function renderEnglish() {
   const idx = new Date().getDate() % englishLessons.length;
   const lesson = englishLessons[idx];
-  document.getElementById('englishContent').innerHTML = `
-    <div class="en-card">
-      <div class="en-title">${lesson.title}</div>
-      <div class="en-source">${lesson.source} · 今日推荐</div>
-      <div class="en-text">${lesson.text.replace(/\n/g,'<br>')}</div>
-      <div style="font-size:12px;color:var(--accent);margin:8px 0">🗣 大声朗读上面段落，练习发音和语感</div>
-      <div class="en-vocab"><b>📖 词解：</b><br>${lesson.vocab.replace(/\|/g,'<br>')}</div>
-    </div>
-    <div class="card" style="margin-top:12px">
-      <h3>✏️ 口语练习笔记</h3>
-      <textarea class="review-input" id="engNote" placeholder="记录生词、发音难点、自己的朗读录音感受..."></textarea>
-      <button class="btn btn-dark btn-sm" onclick="saveEngNote()">保存笔记</button>
-      <div id="engNotes" style="margin-top:8px"></div>
-    </div>
-  `;
+  const fullText = lesson.lines.map(l=>l.en).join(' ');
+  let html = `<div class="en-card">
+    <div class="en-title">${lesson.title}</div>
+    <div class="en-source">${lesson.source} · 今日推荐</div>
+    <button class="play-btn" onclick="speak('${fullText.replace(/'/g,"\\'")}', 'en-US', this)">▶ 播放全文</button>
+    <div style="margin-top:12px">`;
+  lesson.lines.forEach((l,i)=>{
+    const lineText = l.en.replace(/'/g,"\\'");
+    html += `<div class="en-line">
+      <button class="play-btn" style="font-size:11px;padding:4px 8px;align-self:flex-start" onclick="speak('${lineText}', 'en-US', this)">▶</button>
+      <div style="flex:1">
+        <div class="en-orig">${l.en}</div>
+        <div class="en-trans">${l.zh}</div>
+      </div>
+    </div>`;
+  });
+  html += `</div>
+    <div class="en-vocab" style="margin-top:12px"><b>词解：</b><br>${lesson.vocab.replace(/\|/g,'<br>')}</div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>口语练习笔记</h3>
+    <textarea class="review-input" id="engNote" placeholder="记录生词、发音难点、自己的朗读感受..."></textarea>
+    <button class="btn btn-dark btn-sm" onclick="saveEngNote()">保存笔记</button>
+    <div id="engNotes" style="margin-top:8px"></div>
+  </div>`;
+  document.getElementById('englishContent').innerHTML = html;
   renderEngNotes();
 }
 
@@ -715,7 +957,7 @@ function saveEngNote() {
 
 function renderEngNotes() {
   const notes = load('engNotes', []);
-  document.getElementById('engNotes').innerHTML = notes.slice(0,10).map((n,i)=>`
+  document.getElementById('engNotes').innerHTML = notes.slice(0,10).map(n=>`
     <div style="font-size:13px;padding:6px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between">
       <span>${esc(n.text)}</span>
       <span style="font-size:11px;color:var(--text3)">${n.date}</span>
@@ -724,18 +966,16 @@ function renderEngNotes() {
 
 // ============ KOREAN ============
 const koreanCourse = [
-  // 第1-2天：单元音
   { day:1, title:'韩语40音 · 单元音（上）', sections:[
     {h:'发音练习',type:'table',data:[
       ['ㅏ','a','啊'],['ㅓ','eo','哦'],['ㅗ','o','欧'],['ㅑ','ya','呀'],['ㅕ','yeo','哟'],['ㅛ','yo','哟']
-    ],tip:'发音要点：嘴型自然放松，像说中文一样自然发出即可。每个音读10遍。'},
+    ],tip:'发音要点：嘴型自然放松，像说中文一样自然发出即可。每个音读10遍。点播放听标准读音。'},
   ]},
   { day:2, title:'韩语40音 · 单元音（下）', sections:[
     {h:'发音练习',type:'table',data:[
       ['ㅜ','u','乌'],['ㅠ','yu','由'],['ㅡ','eu','呃'],['ㅣ','i','衣']
     ],tip:'注意 ㅡ(eu) 的发音：嘴微张，舌面放平，像中文"饿"去声调'},
   ]},
-  // 第3-4天：辅音
   { day:3, title:'韩语40音 · 松音辅音', sections:[
     {h:'松音',type:'table',data:[
       ['ㄱ','g/k','哥'],['ㄴ','n','呢'],['ㄷ','d/t','的'],['ㄹ','r/l','了'],['ㅁ','m','么']
@@ -745,7 +985,6 @@ const koreanCourse = [
     {h:'松音续',type:'table',data:[['ㅂ','b/p','波'],['ㅅ','s','斯'],['ㅇ','(silent)/ng','嗯'],['ㅈ','j','资'],['ㅎ','h','喝']]},
     {h:'紧音',type:'table',data:[['ㄲ','kk','格'],['ㄸ','tt','德'],['ㅃ','pp','伯'],['ㅆ','ss','斯'],['ㅉ','jj','资']],tip:'紧音发音时喉咙收紧，用力迸出'},
   ]},
-  // 第5-6天：送气音+复合元音
   { day:5, title:'韩语40音 · 送气音+复合元音', sections:[
     {h:'送气音',type:'table',data:[['ㅋ','k','克'],['ㅌ','t','特'],['ㅍ','p','坡'],['ㅊ','ch','此']]},
     {h:'复合元音',type:'table',data:[['ㅐ','ae','哎'],['ㅔ','e','诶'],['ㅒ','yae','耶'],['ㅖ','ye','也'],['ㅘ','wa','哇'],['ㅝ','wo','窝']],tip:'送气音就是要有气出来，拿张纸放在嘴前，纸会动就对了'},
@@ -754,7 +993,6 @@ const koreanCourse = [
     {h:'复合元音续',type:'table',data:[['ㅙ','wae','歪'],['ㅞ','we','喂'],['ㅚ','oe','外'],['ㅟ','wi','为'],['ㅢ','ui','呃衣']]},
     {h:'基础韵尾',type:'table',data:[['ㄱ','k','받침'],['ㄴ','n','안'],['ㄷ','t','곧'],['ㄹ','l','달'],['ㅁ','m','몸'],['ㅂ','p','밥'],['ㅇ','ng','강']],tip:'韵尾（받침）是韩语最独特的部分，发音时气流在嘴中截止'},
   ]},
-  // 第7-8天：基础词汇
   { day:7, title:'基础词汇 · 问候与数字', sections:[
     {h:'日常问候',type:'list',data:[
       ['안녕하세요','an-nyeong-ha-se-yo','你好'],
@@ -766,7 +1004,7 @@ const koreanCourse = [
     {h:'数字 1-10（韩语固有词）',type:'list',data:[
       ['하나','ha-na','1'],['둘','dul','2'],['셋','set','3'],['넷','net','4'],['다섯','da-seot','5'],
       ['여섯','yeo-seot','6'],['일곱','il-gop','7'],['여덟','yeo-deol','8'],['아홉','a-hop','9'],['열','yeol','10']
-    ],tip:'韩语有两套数字系统：固有词（数数量用）和汉字词（日期/钱用）。今天先记固有词。'},
+    ],tip:'韩语有两套数字系统：固有词（数数量用）和汉字词（日期/钱用）。今天先记固有词。点播放听读音。'},
   ]},
   { day:8, title:'基础词汇 · 人称与自我介绍', sections:[
     {h:'人称',type:'list',data:[
@@ -780,7 +1018,6 @@ const koreanCourse = [
       ['결혼식 사진을 찍습니다','gyeol-hon-sik sa-jin-eul jjik-seum-ni-da','我拍婚礼照片']
     ],tip:'练习用韩语介绍自己：이름 + 직업 说出你的名字和职业'},
   ]},
-  // 第9-10天：基础语法
   { day:9, title:'基础语法 · 이에요/예요 + 主格助词', sections:[
     {h:'句型',type:'text',content:'名词 + 이에요/예요 = "是..."\n有韵尾 + 이에요：학생이에요（是学生）\n无韵尾 + 예요：의사예요（是医生）\n\n主格助词 은/는：\n有韵尾 + 은：책은（书...）\n无韵尾 + 는：나는（我...）'},
     {h:'练习',type:'list',data:[
@@ -800,7 +1037,6 @@ const koreanCourse = [
   ]},
 ];
 
-// fill remaining days (11-30) with review/practice
 for(let d=11; d<=30; d++) {
   const topics = [
     {t:'词汇扩展 · 婚礼相关用语',s:[
@@ -848,14 +1084,23 @@ function renderKorean() {
       if(s.type==='table') return `
         <div class="kr-section">
           <h4>${s.h||''}</h4>
-          <div class="kr-table">${(s.data||[]).map(c=>`<div class="kr-cell"><div class="ko">${c[0]}</div><div class="rom">${c[1]}</div><div style="font-size:11px;color:var(--text2)">${c[2]}</div></div>`).join('')}</div>
-          ${s.tip?`<div style="font-size:12px;color:var(--text2);margin-top:8px">💡 ${s.tip}</div>`:''}
+          <div class="kr-table">${(s.data||[]).map(c=>{
+            const ko = c[0].replace(/'/g,"\\'");
+            return `<div class="kr-cell"><div class="ko">${c[0]}</div><div class="rom">${c[1]}</div><div style="font-size:11px;color:var(--text2)">${c[2]}</div><button class="play-btn" style="font-size:10px;padding:3px 8px;margin-top:4px" onclick="speakKorean('${ko}', this)">▶ 播放</button></div>`;
+          }).join('')}</div>
+          ${s.tip?`<div style="font-size:12px;color:var(--text2);margin-top:8px">${s.tip}</div>`:''}
         </div>`;
       if(s.type==='list') return `
         <div class="kr-section">
           <h4>${s.h||''}</h4>
-          ${(s.data||[]).map(c=>`<div style="padding:6px 0;border-bottom:1px solid #eee;font-size:13px"><b>${c[0]}</b> <span style="color:var(--text2)">[${c[1]}]</span> — ${c[2]}</div>`).join('')}
-          ${s.tip?`<div style="font-size:12px;color:var(--text2);margin-top:8px">💡 ${s.tip}</div>`:''}
+          ${(s.data||[]).map(c=>{
+            const ko = c[0].replace(/'/g,"\\'");
+            return `<div style="padding:6px 0;border-bottom:1px solid #eee;font-size:13px;display:flex;align-items:center;gap:8px">
+              <button class="play-btn" style="font-size:10px;padding:3px 8px" onclick="speakKorean('${ko}', this)">▶</button>
+              <div><b>${c[0]}</b> <span style="color:var(--text2)">[${c[1]}]</span> — ${c[2]}</div>
+            </div>`;
+          }).join('')}
+          ${s.tip?`<div style="font-size:12px;color:var(--text2);margin-top:8px">${s.tip}</div>`:''}
         </div>`;
       if(s.type==='text') return `
         <div class="kr-section">
@@ -877,39 +1122,44 @@ function markKoreanDone() {
   }
   save('koreanDay', koreanDay);
   renderKorean();
+  renderHome();
 }
 
 function krPrevDay() { if(koreanDay>1){ koreanDay--; save('koreanDay',koreanDay); renderKorean(); } }
 function krNextDay() { if(koreanDay<30){ koreanDay++; save('koreanDay',koreanDay); renderKorean(); } }
 
-// ============ INSPIRATION ============
-const weddingInspos = [
-  { platform:'抖音', title:'婚礼当天新娘的第一视角vlog', why:'婚礼vlog是抖音持续爆款赛道，第一视角更有代入感，婚礼跟拍摄影师天然有素材优势', angle:'以摄影师视角记录新娘从化妆到仪式全程，插入"摄影师眼中的最美瞬间"对比', dy:'新娘的一天｜原来在摄影师眼里我长这样', xhs:'婚礼当天第一视角｜摄影师镜头下的我vs我眼中的自己', script:'1. 新娘化妆间特写 → 2. 新郎接亲反应 → 3. 仪式交接瞬间 → 4. 抓拍花絮混剪 → BGM：温柔钢琴曲' },
-  { platform:'小红书', title:'备婚攻略·摄影师教你选跟拍', why:'备婚类内容在小红书搜索量极大，"避坑"类内容互动率高', angle:'以专业摄影师角度分享选跟拍的5个关键点，展示自己作品作为范例', dy:'选婚礼跟拍前一定要知道的5件事', xhs:'拍了300场婚礼的摄影师｜选跟拍就看这几点', script:'1. 作品集怎么看（原片vs精修） → 2. 沟通话术怎么问 → 3. 合同避坑 → 4. 时间线安排 → 结尾：自己作品展示' },
-  { platform:'抖音', title:'婚礼感人瞬间合集·催泪向', why:'情感类内容在抖音传播力极强，婚礼天生自带情感共鸣', angle:'整理自己拍摄的婚礼感人画面（父母送别、誓言、first look），配深情文案', dy:'拍了500场婚礼，这些瞬间让我哭了一次又一次', xhs:'婚礼最催泪的10个瞬间｜摄影师的泪点记录', script:'慢镜头+黑白过渡+钢琴BGM → 每个画面配一句话文案 → 结尾留白3秒' },
-  { platform:'小红书', title:'婚礼胶片感调色教程', why:'调色教程是摄影类账号涨粉利器，收藏率极高', angle:'分享婚礼跟拍后期调色思路，附LR预设参数', dy:'婚礼胶片感调色｜一键出片参数分享', xhs:'婚礼调色｜电影感胶片色调参数大公开', script:'原片vs调色对比 → 分步骤讲解 → 参数展示 → 号召保存/点赞' },
-  { platform:'抖音', title:'摄影师工作花絮·搞笑向', why:'幕后花絮人设感强，轻松有趣容易涨粉', angle:'记录拍摄婚礼过程中的搞笑/翻车/感动片段，展示真实工作状态', dy:'婚礼摄影师的工作日常…懂的都懂', xhs:'当婚礼摄影师是一种什么体验｜工作花絮', script:'快节奏剪辑+搞笑音效 → 多场景切换（扛设备/趴地上/抢机位）→ 结尾反转感人' },
-  { platform:'小红书', title:'成都婚礼场地推荐·摄影师视角', why:'本地化内容搜索精准，"成都婚礼"是高频搜索词', angle:'从摄影师角度推荐成都适合拍照的婚礼场地，附实拍图', dy:'成都最适合拍照的婚礼场地TOP5', xhs:'成都婚礼场地｜摄影师私藏的5个出片圣地', script:'每个场地：全景+细节+新人实拍 → 标注光线时间 → 优缺点点评' },
+// ============ INSPIRATION (merged with hotspot) ============
+const inspoData = [
+  { tag:'#婚礼跟拍vlog', trend:'持续热门', platform:'抖音', why:'婚礼vlog是抖音持续爆款赛道，第一视角更有代入感，婚礼跟拍摄影师天然有素材优势', angle:'以摄影师视角记录新娘从化妆到仪式全程，插入"摄影师眼中的最美瞬间"对比', dy:'新娘的一天｜原来在摄影师眼里我长这样', xhs:'婚礼当天第一视角｜摄影师镜头下的我vs我眼中的自己', script:'1. 新娘化妆间特写 → 2. 新郎接亲反应 → 3. 仪式交接瞬间 → 4. 抓拍花絮混剪 → BGM：温柔钢琴曲' },
+  { tag:'#备婚攻略', trend:'常青话题', platform:'小红书', why:'备婚类内容在小红书搜索量极大，"避坑"类内容互动率高', angle:'以专业摄影师角度分享选跟拍的5个关键点，展示自己作品作为范例', dy:'选婚礼跟拍前一定要知道的5件事', xhs:'拍了300场婚礼的摄影师｜选跟拍就看这几点', script:'1. 作品集怎么看（原片vs精修） → 2. 沟通话术怎么问 → 3. 合同避坑 → 4. 时间线安排 → 结尾：自己作品展示' },
+  { tag:'#催泪瞬间', trend:'热门', platform:'抖音', why:'情感类内容在抖音传播力极强，婚礼天生自带情感共鸣', angle:'整理自己拍摄的婚礼感人画面（父母送别、誓言、first look），配深情文案', dy:'拍了500场婚礼，这些瞬间让我哭了一次又一次', xhs:'婚礼最催泪的10个瞬间｜摄影师的泪点记录', script:'慢镜头+黑白过渡+钢琴BGM → 每个画面配一句话文案 → 结尾留白3秒' },
+  { tag:'#氛围感', trend:'上升中', platform:'小红书', why:'小红书"氛围感"相关笔记互动率高，婚礼照片天然适合', angle:'挑选一组光影感强的婚礼照片，配"氛围感婚礼"文案发小红书', dy:'婚礼胶片感调色｜一键出片参数分享', xhs:'婚礼调色｜电影感胶片色调参数大公开', script:'原片vs调色对比 → 分步骤讲解 → 参数展示 → 号召保存/点赞' },
+  { tag:'#摄影师日常', trend:'热门', platform:'抖音', why:'幕后花絮人设感强，轻松有趣容易涨粉', angle:'记录拍摄婚礼过程中的搞笑/翻车/感动片段，展示真实工作状态', dy:'婚礼摄影师的工作日常…懂的都懂', xhs:'当婚礼摄影师是一种什么体验｜工作花絮', script:'快节奏剪辑+搞笑音效 → 多场景切换（扛设备/趴地上/抢机位）→ 结尾反转感人' },
+  { tag:'#成都婚礼', trend:'本地热门', platform:'小红书', why:'本地化内容搜索精准，"成都婚礼"是高频搜索词', angle:'从摄影师角度推荐成都适合拍照的婚礼场地，附实拍图', dy:'成都最适合拍照的婚礼场地TOP5', xhs:'成都婚礼场地｜摄影师私藏的5个出片圣地', script:'每个场地：全景+细节+新人实拍 → 标注光线时间 → 优缺点点评' },
+  { tag:'#电影感', trend:'热门', platform:'双平台', why:'电影感调色/构图是今年摄影赛道流量密码', angle:'选出电影感最强的婚礼照片，做一组16:9横构图调色对比', dy:'婚礼电影感｜摄影师私藏调色参数', xhs:'电影感婚礼照片怎么拍｜摄影师调色分享', script:'原片vs成片对比 → 构图拆解 → 调色参数截图 → BGM推荐' },
+  { tag:'#备婚日记', trend:'常青话题', platform:'小红书', why:'小红书核心婚礼话题，搜索量大、长尾流量好', angle:'以摄影师角度写"拍过300场婚礼总结的备婚建议"，配图用自己作品', dy:'给备婚新娘的10条摄影师建议', xhs:'摄影师拍了300场婚礼后总结的备婚避坑指南', script:'图文轮播 → 每页一条建议+配图 → 结尾引导收藏关注' },
 ];
 
 function renderInspiration() {
-  document.getElementById('inspoDate').textContent = today();
-  const idx = new Date().getDate() % weddingInspos.length;
-  const inspo = weddingInspos[idx];
-  document.getElementById('inspoList').innerHTML = `
-    <div class="inspo-card">
-      <div class="platform">📱 ${inspo.platform} 热门选题</div>
-      <div style="font-weight:600;font-size:15px;margin:4px 0">${inspo.title}</div>
-      <div class="why">🎯 为什么适合你二创：${inspo.why}</div>
-      <div class="angle">💡 改编角度：${inspo.angle}</div>
-      <div style="margin-top:8px">
-        <span class="title-dy">🎵 抖音标题：${inspo.dy}</span>
-        <span class="title-xhs">📕 小红书标题：${inspo.xhs}</span>
+  const trendColors = {'持续热门':'#e74c3c','上升中':'#f39c12','热门':'#e74c3c','常青话题':'#27ae60','本地热门':'#f39c12'};
+  document.getElementById('inspoList').innerHTML = inspoData.map((inspo, i) => {
+    const tc = trendColors[inspo.trend] || '#999';
+    return `
+    <div class="card inspo-card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-weight:700;font-size:15px">${inspo.tag}</span>
+          <span style="font-size:11px;background:${tc};color:#fff;padding:1px 8px;border-radius:10px">${inspo.trend}</span>
+        </div>
+        <span style="font-size:11px;color:var(--text3)">${inspo.platform}</span>
       </div>
-      <div class="script">🎬 拍摄方式/简易脚本：${inspo.script}</div>
-    </div>
-    <div style="font-size:12px;color:var(--text3);margin-top:8px">每日轮换不同选题方向，明天自动刷新</div>
-  `;
+      <div class="inspo-row"><span class="inspo-label">为什么适合二创</span><span class="inspo-val">${inspo.why}</span></div>
+      <div class="inspo-row"><span class="inspo-label">改编角度</span><span class="inspo-val">${inspo.angle}</span></div>
+      <div class="inspo-row"><span class="inspo-label">抖音标题</span><span class="inspo-val" style="color:#000;font-weight:500">${inspo.dy}</span></div>
+      <div class="inspo-row"><span class="inspo-label">小红书标题</span><span class="inspo-val" style="color:#000;font-weight:500">${inspo.xhs}</span></div>
+      <div class="inspo-row"><span class="inspo-label">拍摄方式</span><span class="inspo-val">${inspo.script}</span></div>
+    </div>`;
+  }).join('');
   renderInspoNotes();
 }
 
@@ -923,54 +1173,89 @@ function saveInspoNote() {
 }
 
 function renderInspoNotes() {
-  document.getElementById('inspoNotes').innerHTML = inspoNotes.slice(0,10).map((n,i)=>`
+  document.getElementById('inspoNotes').innerHTML = inspoNotes.slice(0,10).map(n=>`
     <div style="font-size:13px;padding:8px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between">
-      <span>💡 ${esc(n.text)}</span>
+      <span>${esc(n.text)}</span>
       <span style="font-size:11px;color:var(--text3);white-space:nowrap;margin-left:8px">${n.date}</span>
     </div>`).join('') || '<div class="empty">还没有灵感笔记</div>';
 }
 
-// ============ HOTSPOT ============
-const hotspots = [
-  { tag:'#婚礼跟拍', trend:'持续热门', desc:'抖音婚礼跟拍话题播放量持续增长，适合发布作品时带上', idea:'发布今日拍摄精选片段，加话题#婚礼跟拍 #成都婚礼跟拍 #真实婚礼' },
-  { tag:'#氛围感', trend:'上升中', desc:'小红书"氛围感"相关笔记互动率高，婚礼照片天然适合', idea:'挑选一组光影感强的婚礼照片，配"氛围感婚礼"文案发小红书' },
-  { tag:'#备婚日记', trend:'常青话题', desc:'小红书核心婚礼话题，搜索量大、长尾流量好', idea:'以摄影师角度写"拍过300场婚礼总结的备婚建议"，配图用自己作品' },
-  { tag:'#电影感', trend:'热门', desc:'电影感调色/构图是今年摄影赛道流量密码', idea:'选出电影感最强的婚礼照片，做一组16:9横构图调色对比' },
-];
+// ============ DATA STATS ============
+let statsData = load('stats', []);
 
-function renderHotspot() {
-  document.getElementById('hotspotList').innerHTML = hotspots.map(h=>`
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <h3 style="margin:0">${h.tag}</h3>
-        <span style="font-size:12px;background:${h.trend==='上升中'?'#e74c3c':h.trend==='热门'?'#f39c12':'#27ae60'};color:#fff;padding:2px 8px;border-radius:10px">${h.trend}</span>
-      </div>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:8px">${h.desc}</p>
-      <div style="font-size:13px;background:#fafafa;padding:10px;border-radius:8px">
-        <b>💡 二创建议：</b>${h.idea}
-      </div>
-    </div>
-  `).join('');
+function saveStats() {
+  const entry = {
+    date: today(),
+    xhs: { dm:+document.getElementById('xhsDm').value||0, likes:+document.getElementById('xhsLikes').value||0, fans:+document.getElementById('xhsFans').value||0 },
+    dy: { dm:+document.getElementById('dyDm').value||0, likes:+document.getElementById('dyLikes').value||0, fans:+document.getElementById('dyFans').value||0 },
+    wechat: +document.getElementById('wechatAdd').value||0,
+    deals: +document.getElementById('deals').value||0
+  };
+  const existingIdx = statsData.findIndex(s=>s.date===entry.date);
+  if(existingIdx >= 0) statsData[existingIdx] = entry;
+  else statsData.unshift(entry);
+  save('stats', statsData);
+  renderStats();
 }
 
-// ============ REVIEW ============
-function saveReview() {
-  const text = document.getElementById('reviewInput').value.trim();
-  if(!text) return;
-  reviews.unshift({ date:today(), time:now(), text });
-  save('reviews', reviews);
-  document.getElementById('reviewInput').value = '';
-  renderReview();
+function loadTodayStats() {
+  document.getElementById('statsDate').textContent = today();
+  const existing = statsData.find(s=>s.date===today());
+  if(existing) {
+    document.getElementById('xhsDm').value = existing.xhs.dm;
+    document.getElementById('xhsLikes').value = existing.xhs.likes;
+    document.getElementById('xhsFans').value = existing.xhs.fans;
+    document.getElementById('dyDm').value = existing.dy.dm;
+    document.getElementById('dyLikes').value = existing.dy.likes;
+    document.getElementById('dyFans').value = existing.dy.fans;
+    document.getElementById('wechatAdd').value = existing.wechat;
+    document.getElementById('deals').value = existing.deals;
+  }
 }
 
-function renderReview() {
-  document.getElementById('reviewList').innerHTML = reviews.length===0
-    ? '<div class="empty">开始第一次复盘吧</div>'
-    : reviews.map(r=>`
-      <div class="review-item">
-        <div class="rv-date">${r.date} ${r.time}</div>
-        <div class="rv-content">${esc(r.text).replace(/\n/g,'<br>')}</div>
-      </div>`).join('');
+function renderStats() {
+  loadTodayStats();
+  if(statsData.length === 0) {
+    document.getElementById('statsHistory').innerHTML = '<div class="empty">还没有数据记录，填写今日数据后保存</div>';
+    return;
+  }
+  // 汇总
+  const total = statsData.reduce((acc, s) => ({
+    xhsDm: acc.xhsDm + s.xhs.dm, xhsLikes: acc.xhsLikes + s.xhs.likes, xhsFans: acc.xhsFans + s.xhs.fans,
+    dyDm: acc.dyDm + s.dy.dm, dyLikes: acc.dyLikes + s.dy.likes, dyFans: acc.dyFans + s.dy.fans,
+    wechat: acc.wechat + s.wechat, deals: acc.deals + s.deals
+  }), {xhsDm:0,xhsLikes:0,xhsFans:0,dyDm:0,dyLikes:0,dyFans:0,wechat:0,deals:0});
+
+  let summaryHtml = '<div class="stats-summary">' +
+    '<div class="stats-sum-item"><span class="stats-sum-label">小红书私信</span><span class="stats-sum-val">' + total.xhsDm + '</span></div>' +
+    '<div class="stats-sum-item"><span class="stats-sum-label">小红书点赞</span><span class="stats-sum-val">' + total.xhsLikes + '</span></div>' +
+    '<div class="stats-sum-item"><span class="stats-sum-label">小红书涨粉</span><span class="stats-sum-val">' + total.xhsFans + '</span></div>' +
+    '<div class="stats-sum-item"><span class="stats-sum-label">抖音私信</span><span class="stats-sum-val">' + total.dyDm + '</span></div>' +
+    '<div class="stats-sum-item"><span class="stats-sum-label">抖音点赞</span><span class="stats-sum-val">' + total.dyLikes + '</span></div>' +
+    '<div class="stats-sum-item"><span class="stats-sum-label">抖音涨粉</span><span class="stats-sum-val">' + total.dyFans + '</span></div>' +
+    '<div class="stats-sum-item"><span class="stats-sum-label">微信加友</span><span class="stats-sum-val">' + total.wechat + '</span></div>' +
+    '<div class="stats-sum-item"><span class="stats-sum-label">成交单数</span><span class="stats-sum-val">' + total.deals + '</span></div>' +
+  '</div>';
+
+  const historyHtml = statsData.slice(0, 14).map(s =>
+    '<div class="stats-history-item">' +
+      '<div class="stats-h-date">' + s.date + '</div>' +
+      '<div class="stats-h-row">' +
+        '<span class="stats-h-tag" style="color:#e74c3c">小红书</span>' +
+        '私信 ' + s.xhs.dm + ' · 点赞 ' + s.xhs.likes + ' · 涨粉 ' + s.xhs.fans +
+      '</div>' +
+      '<div class="stats-h-row">' +
+        '<span class="stats-h-tag" style="color:#000">抖音</span>' +
+        '私信 ' + s.dy.dm + ' · 点赞 ' + s.dy.likes + ' · 涨粉 ' + s.dy.fans +
+      '</div>' +
+      '<div class="stats-h-row">' +
+        '<span class="stats-h-tag" style="color:#07c160">微信</span>加友 ' + s.wechat +
+        ' &nbsp; <span class="stats-h-tag" style="color:#f39c12">成交</span>' + s.deals + ' 单' +
+      '</div>' +
+    '</div>'
+  ).join('');
+
+  document.getElementById('statsHistory').innerHTML = summaryHtml + historyHtml;
 }
 
 // ============ UTILS ============
@@ -978,61 +1263,244 @@ function esc(s) {
   const d=document.createElement('div'); d.textContent=s; return d.innerHTML;
 }
 
-// ============ INFJ CORNER ============
-let infjData = load('infj', { insights:[], travel:[], todo:[] });
-let infjCurrentType = 'insight';
+// ============ SCHEDULE / CALENDAR ============
+let calCurrentDate = new Date();
+let bookings = load('bookings', {});
+let bookingCurrentDate = '';
 
-function openInfjModal(type) {
-  infjCurrentType = type;
-  const titles = { insight:'💡 添加醍醐灌顶', travel:'🌍 添加想去的地方', todo:'🎯 添加想做的事' };
-  document.getElementById('infjModalTitle').textContent = titles[type];
-  document.getElementById('infjInput').value = '';
-  document.getElementById('infjModal').classList.add('show');
+// 嫁娶吉日数据 (2025-2026, 来源：万年历)
+const weddingJiri = {
+  2025: {
+    1:[1,2,3,4,5,6,10,11,13,15,16,17,18,20,21,23,25,26,27,28,30,31],
+    2:[1,2,5,6,7,9,10,11,12,15,16,17,19,24,27],
+    3:[2,3,6,8,11,14,16,18,20,21,23,26,27,28],
+    4:[2,4,7,15,19,27,30],
+    5:[1,7,10,11,16,17,19,23,25,27,29,31],
+    6:[3,4,5,7,10,19,20,21,22,28,29],
+    7:[1,4,8,9,14,15,20,21,23,25,27,28],
+    8:[1,2,3,4,15,17,23,26,28,29,31],
+    9:[2,4,8,10,12,14,17,20,22,24,26],
+    10:[2,3,8,15,16,17,18,19,25,28,30,31],
+    11:[6,9,15,17,18,21,24,25,27,30],
+    12:[1,10,21,22,24,25,26,27,29,30,31]
+  },
+  2026: {
+    1:[5,7,8,10,12,17,19,20,22,28,29,31],
+    2:[7,10,11,14,19,22,25,26],
+    3:[3,6,9,11,13,15,16,18,21,22,23,28],
+    4:[2,3,10,14,22,25,26],
+    5:[4,5,6,11,12,14,18,20,22,24,26,29,30],
+    6:[1,2,5,14,15,16,17,23,24,26,29],
+    7:[2,6,9,10,15,16,18,20,22,23,27,28,29,30],
+    8:[10,12,18,21,23,24,26,28,30],
+    9:[3,4,5,6,7,9,12,15,17,19,21,27,28],
+    10:[3,6,10,11,12,13,14,20,23,25,26],
+    11:[1,4,6,10,12,13,16,19,20,22,25,26],
+    12:[4,17,21,24]
+  }
+};
+
+function isJiri(year, month, day) {
+  const y = weddingJiri[year];
+  if(!y) return false;
+  const m = y[month];
+  if(!m) return false;
+  return m.includes(day);
 }
 
-function closeInfjModal() {
-  document.getElementById('infjModal').classList.remove('show');
+// 农历日期转换 (使用浏览器内置 Intl API)
+function getLunarDate(date) {
+  try {
+    const parts = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {month:'numeric', day:'numeric'}).formatToParts(date);
+    let m = '', d = '', isLeap = false;
+    for(const p of parts) {
+      if(p.type === 'month') {
+        if(p.value.includes('闰')) { isLeap = true; m = p.value.replace(/[^0-9]/g,''); }
+        else m = p.value.replace(/[^0-9]/g,'');
+      }
+      if(p.type === 'day') d = p.value.replace(/[^0-9]/g,'');
+    }
+    const mi = parseInt(m), di = parseInt(d);
+    if(isNaN(mi) || isNaN(di) || mi < 1 || mi > 12 || di < 1 || di > 30) return '';
+    const months = ['正','二','三','四','五','六','七','八','九','十','冬','腊'];
+    const days = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
+                  '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+                  '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+    // 初一标月份名，其余只显示日
+    if(di === 1) return (isLeap?'闰':'') + months[mi-1] + '月';
+    return days[di-1];
+  } catch(e) {
+    return '';
+  }
 }
 
-function addInfj() {
-  const text = document.getElementById('infjInput').value.trim();
-  if(!text) return;
-  infjData[infjCurrentType].unshift({ date:today(), text });
-  save('infj', infjData);
-  closeInfjModal();
-  renderInfj();
+function renderAllBookings() {
+  const bookingList = Object.entries(bookings).filter(([k,v])=>v).sort();
+  if(bookingList.length === 0) {
+    document.getElementById('allBookingsList').innerHTML = '<div class="empty">还没有已定档期，回到日历点击日期添加</div>';
+    return;
+  }
+  document.getElementById('allBookingsList').innerHTML = bookingList.map(([date, info]) => {
+    const isJi = isJiri(parseInt(date.substring(0,4)), parseInt(date.substring(5,7)), parseInt(date.substring(8,10)));
+    return '<div class="cal-booking-card" onclick="openBookingModal(\'' + date + '\')">' +
+      '<div class="cal-booking-date' + (isJi?' jiri':'') + '">' + date + (isJi?' <span style="font-size:11px">吉日</span>':'') + '</div>' +
+      '<div class="cal-booking-detail"><span class="cal-booking-label">地址</span>' + esc(info.addr || '未填写') + '</div>' +
+      '<div class="cal-booking-detail"><span class="cal-booking-label">时间</span>' + esc(info.time || '未填写') + '</div>' +
+      (info.notes ? '<div class="cal-booking-detail"><span class="cal-booking-label">注意</span>' + esc(info.notes).replace(/\n/g,'<br>') + '</div>' : '') +
+    '</div>';
+  }).join('');
 }
 
-function deleteInfj(type, idx) {
-  infjData[type].splice(idx, 1);
-  save('infj', infjData);
-  renderInfj();
+function toggleAllBookings() {
+  const calView = document.getElementById('calView');
+  const allView = document.getElementById('allBookingsView');
+  const btn = document.getElementById('toggleAllBtn');
+  const monthCard = document.getElementById('currentMonthBookingsCard');
+  if(allView.style.display === 'none') {
+    calView.style.display = 'none';
+    allView.style.display = 'block';
+    monthCard.style.display = 'none';
+    btn.textContent = '📅 回到日历';
+    renderAllBookings();
+  } else {
+    calView.style.display = 'block';
+    allView.style.display = 'none';
+    monthCard.style.display = 'block';
+    btn.textContent = '📋 全部档期';
+  }
 }
 
-function renderInfj() {
-  const renderSection = (id, data, emptyMsg) => {
-    document.getElementById(id).innerHTML = data.length===0
-      ? `<div class="empty">${emptyMsg}</div>`
-      : data.map((item, i)=>`
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f0f0">
-          <div style="flex:1">
-            <div style="font-size:13px;line-height:1.6">${esc(item.text)}</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px">${item.date}</div>
-          </div>
-          <button class="del-btn" onclick="deleteInfj('${id==='infjInsights'?'insights':id==='infjTravel'?'travel':'todo'}',${i})">×</button>
-        </div>`).join('');
-  };
-  renderSection('infjInsights', infjData.insights, '记录那些让你豁然开朗的瞬间');
-  renderSection('infjTravel', infjData.travel, '世界那么大，都想去看看');
-  renderSection('infjTodos', infjData.todo, '列下你想达成的事情');
+function renderSchedule() {
+  const year = calCurrentDate.getFullYear();
+  const month = calCurrentDate.getMonth();
+  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+  document.getElementById('calMonthTitle').textContent = year + '年 ' + monthNames[month];
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startWeekday = firstDay.getDay();
+
+  const todayStr = today();
+  let html = '';
+
+  // 上月尾部
+  const prevMonthDate = new Date(year, month, 0);
+  const prevDays = prevMonthDate.getDate();
+  for(let i = startWeekday - 1; i >= 0; i--) {
+    const d = prevDays - i;
+    const py = month === 0 ? year - 1 : year;
+    const pm = month === 0 ? 12 : month;
+    const ds = py + '-' + String(pm).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    html += '<div class="cal-cell other-month" onclick="openBookingModal(\'' + ds + '\')">' +
+      '<div class="cal-day-num">' + d + '</div>' +
+      '<div class="cal-lunar">' + getLunarDate(new Date(py, pm-1, d)) + '</div></div>';
+  }
+
+  // 当月
+  for(let d = 1; d <= daysInMonth; d++) {
+    const ds = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isToday = ds === todayStr;
+    const jiri = isJiri(year, month+1, d);
+    const booked = bookings[ds];
+    const lunar = getLunarDate(new Date(year, month, d));
+
+    let cls = 'cal-cell';
+    if(isToday) cls += ' today';
+    if(booked) cls += ' booked';
+
+    html += '<div class="' + cls + '" onclick="openBookingModal(\'' + ds + '\')">' +
+      '<div class="cal-day-num ' + (jiri?'jiri':'') + '">' + d + '</div>' +
+      '<div class="cal-lunar ' + (jiri?'jiri':'') + '">' + lunar + '</div>' +
+      (booked ? '<div class="cal-booked-dot"></div>' : '') +
+      '</div>';
+  }
+
+  // 下月头部补齐
+  const totalCells = startWeekday + daysInMonth;
+  const remaining = (7 - (totalCells % 7)) % 7;
+  for(let d = 1; d <= remaining; d++) {
+    const ny = month === 11 ? year + 1 : year;
+    const nm = month === 11 ? 1 : month + 2;
+    const ds = ny + '-' + String(nm).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    html += '<div class="cal-cell other-month" onclick="openBookingModal(\'' + ds + '\')">' +
+      '<div class="cal-day-num">' + d + '</div>' +
+      '<div class="cal-lunar">' + getLunarDate(new Date(ny, nm-1, d)) + '</div></div>';
+  }
+
+  document.getElementById('calGrid').innerHTML = html;
+
+  // 已定档期列表
+  const bookingList = Object.entries(bookings).filter(([k,v])=>v).sort();
+  document.getElementById('calBookings').innerHTML = bookingList.length === 0
+    ? '<div class="empty">还没有已定档期，点击日历中的日期添加</div>'
+    : bookingList.map(([date, info]) =>
+      '<div class="cal-booking-item" onclick="openBookingModal(\'' + date + '\')">' +
+        '<div><div class="cal-booking-date">' + date + '</div>' +
+        '<div class="cal-booking-addr">' + esc(info.addr || '未填写地址') + '</div></div>' +
+        '<div style="font-size:12px;color:var(--text3)">' + esc(info.time || '') + '</div>' +
+      '</div>').join('');
+}
+
+function calPrevMonth() {
+  calCurrentDate.setMonth(calCurrentDate.getMonth() - 1);
+  renderSchedule();
+}
+
+function calNextMonth() {
+  calCurrentDate.setMonth(calCurrentDate.getMonth() + 1);
+  renderSchedule();
+}
+
+function openBookingModal(dateStr) {
+  bookingCurrentDate = dateStr;
+  const jiri = isJiri(parseInt(dateStr.substring(0,4)), parseInt(dateStr.substring(5,7)), parseInt(dateStr.substring(8,10)));
+  document.getElementById('bookingModalTitle').textContent = '档期 · ' + dateStr + (jiri ? '（嫁娶吉日）' : '');
+  const b = bookings[dateStr];
+  if(b) {
+    document.getElementById('bookingAddr').value = b.addr || '';
+    document.getElementById('bookingTime').value = b.time || '';
+    document.getElementById('bookingNotes').value = b.notes || '';
+    document.getElementById('bookingDelBtn').style.display = 'block';
+  } else {
+    document.getElementById('bookingAddr').value = '';
+    document.getElementById('bookingTime').value = '';
+    document.getElementById('bookingNotes').value = '';
+    document.getElementById('bookingDelBtn').style.display = 'none';
+  }
+  document.getElementById('bookingModal').classList.add('show');
+}
+
+function closeBookingModal() {
+  document.getElementById('bookingModal').classList.remove('show');
+}
+
+function saveBooking() {
+  const addr = document.getElementById('bookingAddr').value.trim();
+  const time = document.getElementById('bookingTime').value.trim();
+  const notes = document.getElementById('bookingNotes').value.trim();
+  if(!addr && !time && !notes) { closeBookingModal(); return; }
+  bookings[bookingCurrentDate] = { addr, time, notes };
+  save('bookings', bookings);
+  closeBookingModal();
+  renderSchedule();
+}
+
+function deleteBooking() {
+  delete bookings[bookingCurrentDate];
+  save('bookings', bookings);
+  closeBookingModal();
+  renderSchedule();
 }
 
 // ============ INIT ============
+renderHome();
 renderPlan();
-renderReview();
+renderStats();
 renderEnglish();
 renderKorean();
-renderInfj();
+renderSchedule();
 </script>
 </body>
 </html>
