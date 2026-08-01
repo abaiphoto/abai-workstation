@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="阿白工作台">
+<title>阿白工作台</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --card: #fff;
+  --text: #1a1a1a;
+  --text2: #666;
+  --text3: #999;
+  --border: #e8e8e8;
+  --accent: #1a1a1a;
+  --accent2: #444;
+  --danger: #c0392b;
+  --green: #27ae60;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --sidebar-w: 210px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:var(--font); background:var(--bg); color:var(--text); display:flex; min-height:100vh; -webkit-tap-highlight-color:transparent; }
+
+/* sidebar */
+.sidebar {
+  width:var(--sidebar-w); background:#1a1a1a; color:#fff; position:fixed; top:0; left:0; bottom:0;
+  display:flex; flex-direction:column; z-index:100; padding:24px 0 16px; overflow-y:auto;
+}
+.sidebar-logo { padding:0 20px 24px; font-size:18px; font-weight:700; letter-spacing:1px; border-bottom:1px solid #333; margin-bottom:8px; }
+.sidebar-logo span { font-size:12px; font-weight:400; color:#888; display:block; margin-top:2px; }
+.nav-item {
+  display:flex; align-items:center; gap:10px; padding:11px 20px; cursor:pointer; font-size:14px;
+  color:#999; transition:all .15s; border-left:3px solid transparent; margin:2px 0;
+}
+.nav-item:hover { color:#fff; background:rgba(255,255,255,0.04); }
+.nav-item.active { color:#fff; background:rgba(255,255,255,0.08); border-left-color:#fff; }
+.nav-item .icon { font-size:18px; width:24px; text-align:center; }
+
+/* main */
+.main { margin-left:var(--sidebar-w); flex:1; padding:32px 40px; max-width:960px; }
+.page { display:none; animation:fadeIn .25s; }
+.page.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+
+/* typography */
+h1 { font-size:26px; font-weight:700; margin-bottom:4px; }
+h2 { font-size:18px; font-weight:600; margin-bottom:16px; }
+h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
+.subtitle { color:var(--text2); font-size:13px; margin-bottom:28px; }
+
+/* cards */
+.card { background:var(--card); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); margin-bottom:16px; border:1px solid var(--border); }
+.card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.card-header h3 { margin-bottom:0; }
+
+/* stats row */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+.stat-card { background:var(--card); border-radius:var(--radius); padding:16px; text-align:center; box-shadow:var(--shadow); border:1px solid var(--border); }
+.stat-card .num { font-size:28px; font-weight:700; }
+.stat-card .label { font-size:12px; color:var(--text2); margin-top:2px; }
+
+/* task */
+.task-input-row { display:flex; gap:8px; margin-bottom:12px; }
+.task-input-row input { flex:1; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:14px; font-family:var(--font); outline:none; transition:border .15s; }
+.task-input-row input:focus { border-color:var(--accent); }
+.task-input-row select { padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; font-family:var(--font); background:#fff; outline:none; }
+.btn { padding:10px 18px; border:none; border-radius:var(--radius-sm); font-size:13px; font-family:var(--font); cursor:pointer; font-weight:600; transition:all .15s; }
+.btn-dark { background:var(--accent); color:#fff; }
+.btn-dark:hover { background:var(--accent2); }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-outline:hover { background:#f5f5f5; }
+.btn-sm { padding:6px 12px; font-size:12px; }
+.btn-danger { background:transparent; color:var(--danger); border:1px solid var(--danger); }
+.btn-danger:hover { background:var(--danger); color:#fff; }
+
+/* task list */
+.task-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #f0f0f0; }
+.task-item:last-child { border-bottom:none; }
+.task-item input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
+.task-item .task-text { flex:1; font-size:14px; }
+.task-item .task-text.done { text-decoration:line-through; color:var(--text3); }
+.task-item .task-cat { font-size:11px; padding:2px 8px; border-radius:10px; background:#f0f0f0; color:var(--text2); }
+.task-item .del-btn { background:none; border:none; color:#ccc; cursor:pointer; font-size:16px; padding:2px 6px; }
+.task-item .del-btn:hover { color:var(--danger); }
+
+/* knowledge */
+.knowledge-list { max-height:300px; overflow-y:auto; }
+.knowledge-item { padding:8px 0; border-bottom:1px solid #f0f0f0; font-size:13px; display:flex; justify-content:space-between; }
+.knowledge-item .date { color:var(--text3); font-size:11px; white-space:nowrap; margin-left:12px; }
+
+/* sport */
+.sport-video { display:flex; align-items:center; gap:12px; padding:12px; margin-bottom:8px; background:#fafafa; border-radius:var(--radius-sm); }
+.sport-video .check { width:20px; height:20px; cursor:pointer; accent-color:var(--accent); }
+.sport-video .info { flex:1; }
+.sport-video .info .title { font-size:14px; font-weight:500; }
+.sport-video .info .up { font-size:12px; color:var(--text2); }
+.sport-video .link-btn { font-size:12px; color:var(--accent); text-decoration:none; white-space:nowrap; padding:6px 10px; border-radius:var(--radius-sm); border:1px solid var(--border); }
+.sport-video .link-btn:hover { background:var(--accent); color:#fff; }
+.sport-video.done { opacity:0.5; }
+
+/* korean */
+.kr-progress { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+.kr-day { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; cursor:pointer; border:1px solid var(--border); background:#fff; transition:all .15s; }
+.kr-day.done { background:var(--accent); color:#fff; border-color:var(--accent); }
+.kr-day.current { border:2px solid var(--accent); font-weight:700; }
+.kr-content { background:#fafafa; border-radius:var(--radius-sm); padding:16px; margin-top:8px; }
+.kr-content .kr-title { font-size:16px; font-weight:600; margin-bottom:8px; }
+.kr-content .kr-section { margin-bottom:10px; }
+.kr-content .kr-section h4 { font-size:13px; color:var(--text2); margin-bottom:4px; }
+.kr-content .kr-table { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+.kr-content .kr-cell { padding:8px; background:#fff; border-radius:4px; font-size:13px; text-align:center; }
+.kr-content .kr-cell .ko { font-size:16px; font-weight:600; }
+.kr-content .kr-cell .rom { font-size:11px; color:var(--text2); }
+
+/* english */
+.en-card { background:#fafafa; border-radius:var(--radius-sm); padding:16px; margin-bottom:8px; }
+.en-card .en-title { font-size:15px; font-weight:600; margin-bottom:4px; }
+.en-card .en-source { font-size:12px; color:var(--text2); margin-bottom:8px; }
+.en-card .en-text { font-size:14px; line-height:1.8; color:var(--text); margin-bottom:8px; }
+.en-card .en-vocab { font-size:12px; color:var(--text2); line-height:1.6; }
+.en-card .en-vocab b { color:var(--text); }
+
+/* inspiration / hotspot */
+.inspo-card { border-left:3px solid var(--accent); padding-left:12px; margin-bottom:12px; }
+.inspo-card .platform { font-size:12px; color:var(--accent); font-weight:600; }
+.inspo-card .why { font-size:13px; color:var(--text2); margin:4px 0; }
+.inspo-card .angle { font-size:13px; margin:4px 0; }
+.inspo-card .title-dy, .inspo-card .title-xhs { font-size:12px; padding:2px 6px; background:#f0f0f0; border-radius:4px; display:inline-block; margin:2px 4px 2px 0; }
+.inspo-card .script { font-size:12px; color:var(--text2); margin-top:4px; background:#fafafa; padding:8px; border-radius:4px; }
+
+/* review */
+.review-input { width:100%; min-height:100px; padding:12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font); font-size:14px; resize:vertical; margin-bottom:8px; outline:none; }
+.review-input:focus { border-color:var(--accent); }
+.review-list .review-item { padding:12px; border-bottom:1px solid #f0f0f0; font-size:13px; }
+.review-item .rv-date { font-size:11px; color:var(--text3); }
+.review-item .rv-content { margin-top:4px; line-height:1.6; }
+
+/* clock */
+.clock-row { display:flex; align-items:center; gap:16px; margin-bottom:8px; }
+.clock-time { font-size:48px; font-weight:200; letter-spacing:2px; }
+.clock-date { font-size:14px; color:var(--text2); }
+.quote-text { font-size:13px; color:var(--text3); font-style:italic; margin-top:8px; }
+
+/* hamburger */
+.hamburger { display:none; position:fixed; top:12px; left:64px; z-index:50; width:36px; height:36px; background:#fff; border:1px solid var(--border); border-radius:8px; align-items:center; justify-content:center; cursor:pointer; font-size:18px; box-shadow:var(--shadow); }
+
+/* tabs */
+.tabs { display:flex; gap:0; margin-bottom:16px; border-bottom:1px solid var(--border); }
+.tab { padding:8px 16px; font-size:13px; cursor:pointer; color:var(--text2); border-bottom:2px solid transparent; transition:all .15s; }
+.tab.active { color:var(--text); border-bottom-color:var(--accent); font-weight:600; }
+.tab-content { display:none; }
+.tab-content.active { display:block; animation:fadeIn .2s; }
+
+@media(max-width:768px) {
+  .sidebar { width:56px; padding:16px 0 16px; }
+  .sidebar-logo { padding:0 8px 16px; font-size:13px; text-align:center; }
+  .sidebar-logo span { display:none; }
+  .nav-item { padding:12px 8px; justify-content:center; font-size:0; border-left:none; border-bottom:2px solid transparent; }
+  .nav-item .icon { font-size:20px; margin:0; }
+  .main { margin-left:56px; padding:16px; max-width:100%; }
+  .stats-row { grid-template-columns:repeat(2,1fr); }
+  .clock-time { font-size:36px; }
+  .hamburger { display:flex; }
+  h1 { font-size:20px; }
+
+  /* expanded sidebar overlay on mobile */
+  .sidebar.expanded { width:var(--sidebar-w); }
+  .sidebar.expanded .sidebar-logo { padding:0 20px 24px; font-size:18px; text-align:left; }
+  .sidebar.expanded .sidebar-logo span { display:block; }
+  .sidebar.expanded .nav-item { padding:11px 20px; justify-content:flex-start; font-size:14px; border-left:3px solid transparent; border-bottom:none; }
+  .sidebar.expanded .nav-item .icon { font-size:18px; margin-right:6px; }
+  .sidebar-overlay { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.3); z-index:99; }
+  .sidebar-overlay.show { display:block; }
+}
+
+/* empty state */
+.empty { text-align:center; padding:32px 16px; color:var(--text3); font-size:13px; }
+
+/* modal */
+.modal-overlay { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.4); z-index:200; align-items:center; justify-content:center; }
+.modal-overlay.show { display:flex; }
+.modal { background:#fff; border-radius:var(--radius); padding:24px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; }
+.modal h3 { margin-bottom:12px; }
+.modal textarea { width:100%; min-height:80px; padding:10px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font); font-size:13px; outline:none; resize:vertical; }
+.modal .btn-row { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+
+/* progress bar */
+.progress-bar { height:6px; background:#eee; border-radius:3px; margin-top:6px; overflow:hidden; }
+.progress-bar .fill { height:100%; background:var(--accent); border-radius:3px; transition:width .3s; }
+
+/* PWA install hint */
+.install-hint { background:#1a1a1a; color:#fff; padding:12px 16px; border-radius:var(--radius-sm); font-size:12px; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.install-hint button { background:#fff; color:#1a1a1a; border:none; padding:6px 12px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600; white-space:nowrap; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-logo">阿白工作台<span>CHENGDU · WEDDING</span></div>
+  <div class="nav-item active" data-page="home"><span class="icon">🏠</span>首页概览</div>
+  <div class="nav-item" data-page="plan"><span class="icon">📋</span>每日计划</div>
+  <div class="nav-item" data-page="inspiration"><span class="icon">💡</span>选题灵感</div>
+  <div class="nav-item" data-page="hotspot"><span class="icon">🔥</span>爆款热点</div>
+  <div class="nav-item" data-page="review"><span class="icon">📊</span>内容复盘</div>
+  <div class="nav-item" data-page="sport"><span class="icon">🏃</span>运动打卡</div>
+  <div class="nav-item" data-page="english"><span class="icon">🇬🇧</span>英语口语</div>
+  <div class="nav-item" data-page="korean"><span class="icon">🇰🇷</span>韩语学习</div>
+  <div class="nav-item" data-page="infj"><span class="icon">□</span>INFJ角落</div>
+</nav>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="install-hint" id="installHint" style="display:none">
+      💡 添加到手机桌面，像App一样使用 <button onclick="dismissHint()">知道了</button>
+    </div>
+    <div class="clock-row">
+      <div class="clock-time" id="clockTime">--:--</div>
+      <div class="clock-date" id="clockDate"></div>
+    </div>
+    <div class="quote-text" id="dailyQuote"></div>
+    <div style="margin-top:20px;">
+      <h2>今日概览</h2>
+      <div class="stats-row" id="homeStats"></div>
+      <div class="card">
+        <div class="card-header"><h3>快速待办</h3></div>
+        <div id="homeQuickTasks"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAN -->
+  <div class="page" id="page-plan">
+    <h1>每日计划</h1>
+    <div class="tabs">
+      <div class="tab active" data-tab="tab-today">今日概览</div>
+      <div class="tab" data-tab="tab-daily">个人日常</div>
+      <div class="tab" data-tab="tab-grow">提升积累</div>
+    </div>
+
+    <div class="tab-content active" id="tab-today">
+      <div class="stats-row" id="planStats"></div>
+      <div class="card">
+        <div class="card-header"><h3>今日任务</h3></div>
+        <div class="task-input-row">
+          <input type="text" id="taskInput" placeholder="添加新任务...">
+          <select id="taskCat">
+            <option value="创作">创作</option>
+            <option value="个人">个人</option>
+            <option value="提升">提升</option>
+          </select>
+          <button class="btn btn-dark" onclick="addTask()">添加</button>
+        </div>
+        <div id="taskList"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-daily">
+      <div class="card">
+        <h3>雷打不动的日课</h3>
+        <div id="dailyRoutines"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-grow">
+      <div class="card">
+        <div class="card-header"><h3>摄影知识碎片</h3><button class="btn btn-outline btn-sm" onclick="openKnowledgeModal()">+ 添加</button></div>
+        <div class="knowledge-list" id="knowledgeList"></div>
+        <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="exportKnowledge()">📋 查看全部整理</button>
+      </div>
+      <div class="card" id="knowledgeExport" style="display:none">
+        <div class="card-header"><h3>📚 知识整理汇总</h3><button class="btn btn-outline btn-sm" onclick="document.getElementById('knowledgeExport').style.display='none'">收起</button></div>
+        <div id="knowledgeExportContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSPIRATION -->
+  <div class="page" id="page-inspiration">
+    <h1>选题灵感</h1>
+    <p class="subtitle">婚礼跟拍行业热门选题 & 二创分析</p>
+    <div class="card">
+      <div class="card-header"><h3>💡 今日推荐选题</h3><span style="font-size:12px;color:var(--text3)" id="inspoDate"></span></div>
+      <div id="inspoList"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>✏️ 手动添加灵感</h3></div>
+      <textarea class="review-input" id="inspoNote" placeholder="记录灵感来源链接和你的想法..."></textarea>
+      <button class="btn btn-dark btn-sm" onclick="saveInspoNote()">保存</button>
+      <div id="inspoNotes" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- HOTSPOT -->
+  <div class="page" id="page-hotspot">
+    <h1>爆款热点</h1>
+    <p class="subtitle">结合婚礼行业热点 · 二创参考</p>
+    <div id="hotspotList"></div>
+  </div>
+
+  <!-- REVIEW -->
+  <div class="page" id="page-review">
+    <h1>内容复盘</h1>
+    <div class="card">
+      <h3>📝 今日复盘</h3>
+      <textarea class="review-input" id="reviewInput" placeholder="今天发布了什么内容？数据如何？有什么收获和不足？"></textarea>
+      <button class="btn btn-dark" onclick="saveReview()">保存复盘</button>
+    </div>
+    <div class="card">
+      <h3>📜 历史复盘</h3>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+
+  <!-- SPORT -->
+  <div class="page" id="page-sport">
+    <h1>运动打卡 💪</h1>
+    <p class="subtitle" id="sportDate"></p>
+    <div id="sportList"></div>
+  </div>
+
+  <!-- ENGLISH -->
+  <div class="page" id="page-english">
+    <h1>英语口语</h1>
+    <p class="subtitle">每日一段 · 朗读 + 词解</p>
+    <div id="englishContent"></div>
+  </div>
+
+  <!-- KOREAN -->
+  <div class="page" id="page-korean">
+    <h1>韩语学习 🇰🇷</h1>
+    <p class="subtitle">从零开始 · 每日半小时</p>
+    <div class="kr-progress" id="krProgress"></div>
+    <div class="kr-content" id="krContent"></div>
+    <div style="margin-top:12px;display:flex;gap:8px;">
+      <button class="btn btn-dark btn-sm" onclick="markKoreanDone()">✅ 完成今日学习</button>
+      <button class="btn btn-outline btn-sm" id="krPrevBtn" onclick="krPrevDay()">← 前一天</button>
+      <button class="btn btn-outline btn-sm" id="krNextBtn" onclick="krNextDay()">后一天 →</button>
+    </div>
+  </div>
+
+  <!-- INFJ -->
+  <div class="page" id="page-infj">
+    <h1>□ INFJ 角落</h1>
+    <p class="subtitle">属于自己的精神自留地</p>
+
+    <div class="card">
+      <div class="card-header"><h3>💡 醍醐灌顶</h3><button class="btn btn-outline btn-sm" onclick="openInfjModal('insight')">+ 添加</button></div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:8px">那些让你心头一颤的观点、句子、领悟</p>
+      <div id="infjInsights"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>🌍 想去的地方</h3><button class="btn btn-outline btn-sm" onclick="openInfjModal('travel')">+ 添加</button></div>
+      <div id="infjTravel"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>🎯 想做的事情</h3><button class="btn btn-outline btn-sm" onclick="openInfjModal('todo')">+ 添加</button></div>
+      <div id="infjTodos"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- INFJ Modal -->
+<div class="modal-overlay" id="infjModal">
+  <div class="modal">
+    <h3 id="infjModalTitle"></h3>
+    <textarea id="infjInput" placeholder="写下你想记录的..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-outline btn-sm" onclick="closeInfjModal()">取消</button>
+      <button class="btn btn-dark btn-sm" onclick="addInfj()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge Modal -->
+<div class="modal-overlay" id="knowledgeModal">
+  <div class="modal">
+    <h3>添加摄影知识碎片</h3>
+    <textarea id="knowledgeInput" placeholder="今天学到的小知识点..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-outline btn-sm" onclick="closeKnowledgeModal()">取消</button>
+      <button class="btn btn-dark btn-sm" onclick="addKnowledge()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ DATA LAYER ============
+const STORAGE_KEY = 'abai_ws_';
+function load(k, d) { try { const v = localStorage.getItem(STORAGE_KEY+k); return v ? JSON.parse(v) : d; } catch(e) { return d; } }
+function save(k, v) { localStorage.setItem(STORAGE_KEY+k, JSON.stringify(v)); }
+
+function today() { return new Date().toISOString().split('T')[0]; }
+function now() { const d=new Date(); return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'); }
+
+let tasks = load('tasks', []);
+let knowledge = load('knowledge', []);
+let reviews = load('reviews', []);
+let sportDone = load('sportDone', {});
+let koreanDay = load('koreanDay', 1);
+let koreanDoneDays = load('koreanDoneDays', []);
+let inspoNotes = load('inspoNotes', []);
+
+// ============ NAVIGATION ============
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const p = document.getElementById('page-'+page);
+  if(p) p.classList.add('active');
+  document.querySelectorAll('.nav-item[data-page="'+page+'"]').forEach(n=>n.classList.add('active'));
+  if(window.innerWidth<=768) collapseSidebar();
+  if(page==='home') renderHome();
+  if(page==='plan') renderPlan();
+  if(page==='inspiration') renderInspiration();
+  if(page==='hotspot') renderHotspot();
+  if(page==='review') renderReview();
+  if(page==='sport') renderSport();
+  if(page==='english') renderEnglish();
+  if(page==='korean') renderKorean();
+  if(page==='infj') renderInfj();
+}
+
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  sb.classList.toggle('expanded');
+  ov.classList.toggle('show');
+}
+
+function collapseSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  sb.classList.remove('expanded');
+  ov.classList.remove('show');
+}
+
+document.querySelectorAll('.nav-item').forEach(el=>el.addEventListener('click',()=>navigate(el.dataset.page)));
+// sidebar tap to expand on mobile
+document.querySelector('.sidebar').addEventListener('click', function(e) {
+  if(window.innerWidth<=768 && !this.classList.contains('expanded') && !e.target.closest('.nav-item')) {
+    toggleSidebar();
+  }
+});
+
+// tabs
+document.querySelectorAll('.tab').forEach(el=>el.addEventListener('click',()=>{
+  const parent = el.parentElement;
+  parent.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const container = parent.parentElement;
+  container.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
+  const tc = document.getElementById(el.dataset.tab);
+  if(tc) tc.classList.add('active');
+}));
+
+// ============ CLOCK & QUOTE ============
+const quotes = [
+  '"每一帧都是不可复制的瞬间"',
+  '"好的照片会讲故事"',
+  '"婚礼摄影不是记录样子，是记录感情"',
+  '"只有爱，让快门变慢"',
+  '"拍的不是婚礼，是一个家庭的第一页"',
+  '"先感动自己，才能感动别人"',
+  '"真实比完美更动人"'
+];
+
+function updateClock() {
+  const d = new Date();
+  document.getElementById('clockTime').textContent = d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
+  const days = ['日','一','二','三','四','五','六'];
+  document.getElementById('clockDate').textContent = d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+days[d.getDay()];
+  document.getElementById('dailyQuote').textContent = quotes[d.getDay() % quotes.length];
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+// ============ INSTALL HINT ============
+if (!load('hintDismissed', false) && window.matchMedia('(display-mode: browser)').matches) {
+  setTimeout(()=>{ document.getElementById('installHint').style.display='flex'; }, 2000);
+}
+function dismissHint() {
+  document.getElementById('installHint').style.display='none';
+  save('hintDismissed', true);
+}
+
+// ============ HOME ============
+function renderHome() {
+  const td = today();
+  const todayTasks = tasks.filter(t=>t.date===td);
+  const done = todayTasks.filter(t=>t.done).length;
+  const total = todayTasks.length;
+  const pct = total>0 ? Math.round(done/total*100) : 0;
+  document.getElementById('homeStats').innerHTML = `
+    <div class="stat-card"><div class="num">${total}</div><div class="label">今日任务</div></div>
+    <div class="stat-card"><div class="num">${done}</div><div class="label">已完成</div></div>
+    <div class="stat-card"><div class="num">${total-done}</div><div class="label">待完成</div></div>
+    <div class="stat-card"><div class="num">${pct}%</div><div class="label">完成率</div></div>
+  `;
+  const undone = todayTasks.filter(t=>!t.done);
+  document.getElementById('homeQuickTasks').innerHTML = undone.length===0
+    ? '<div class="empty">🎉 今日任务全部完成！</div>'
+    : undone.map(t=>`<div class="task-item"><input type="checkbox" onchange="toggleTask(${t.id})"><span class="task-text">${esc(t.text)}</span><span class="task-cat">${esc(t.cat)}</span></div>`).join('');
+}
+
+// ============ TASKS ============
+let taskIdCounter = load('taskIdCounter', 0);
+
+function addTask() {
+  const input = document.getElementById('taskInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const cat = document.getElementById('taskCat').value;
+  tasks.push({ id:++taskIdCounter, date:today(), text, cat, done:false });
+  input.value = '';
+  save('taskIdCounter', taskIdCounter);
+  save('tasks', tasks);
+  renderPlan();
+  renderHome();
+}
+
+function toggleTask(id) {
+  const t = tasks.find(t=>t.id===id);
+  if(t) { t.done=!t.done; save('tasks', tasks); }
+  renderPlan();
+  renderHome();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t=>t.id!==id);
+  save('tasks', tasks);
+  renderPlan();
+  renderHome();
+}
+
+function renderPlan() {
+  const td = today();
+  const todayTasks = tasks.filter(t=>t.date===td);
+  const done = todayTasks.filter(t=>t.done).length;
+  const total = todayTasks.length;
+  const pct = total>0 ? Math.round(done/total*100) : 0;
+
+  document.getElementById('planStats').innerHTML = `
+    <div class="stat-card"><div class="num">${total}</div><div class="label">今日任务</div></div>
+    <div class="stat-card"><div class="num">${done}</div><div class="label">已完成</div></div>
+    <div class="stat-card"><div class="num">${total-done}</div><div class="label">待完成</div></div>
+    <div class="stat-card"><div class="num">${pct}%</div><div class="label">完成率</div>
+      <div class="progress-bar" style="margin-top:8px"><div class="fill" style="width:${pct}%"></div></div>
+    </div>
+  `;
+
+  document.getElementById('taskList').innerHTML = todayTasks.length===0
+    ? '<div class="empty">还没有任务，添加一个吧</div>'
+    : todayTasks.map(t=>`
+      <div class="task-item">
+        <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
+        <span class="task-text ${t.done?'done':''}">${esc(t.text)}</span>
+        <span class="task-cat">${esc(t.cat)}</span>
+        <button class="del-btn" onclick="deleteTask(${t.id})">×</button>
+      </div>`).join('');
+
+  // daily routines
+  document.getElementById('dailyRoutines').innerHTML = `
+    <div class="task-item">
+      <span class="task-text">🇰🇷 韩语学习 30分钟</span>
+      <span class="task-cat">日课</span>
+    </div>
+    <div class="task-item">
+      <span class="task-text">🇬🇧 英语口语练习</span>
+      <span class="task-cat">日课</span>
+    </div>
+    <div class="task-item">
+      <span class="task-text">📷 看一课时婚礼摄影课</span>
+      <span class="task-cat">日课</span>
+    </div>
+  `;
+
+  renderKnowledge();
+}
+
+// ============ KNOWLEDGE ============
+function openKnowledgeModal() { document.getElementById('knowledgeModal').classList.add('show'); }
+function closeKnowledgeModal() { document.getElementById('knowledgeModal').classList.remove('show'); document.getElementById('knowledgeInput').value=''; }
+function addKnowledge() {
+  const text = document.getElementById('knowledgeInput').value.trim();
+  if(!text) return;
+  knowledge.unshift({ date:today(), time:now(), text });
+  save('knowledge', knowledge);
+  closeKnowledgeModal();
+  renderKnowledge();
+}
+function deleteKnowledge(idx) { knowledge.splice(idx,1); save('knowledge', knowledge); renderKnowledge(); }
+
+function renderKnowledge() {
+  const list = document.getElementById('knowledgeList');
+  list.innerHTML = knowledge.length===0
+    ? '<div class="empty">开始记录吧，每天一个小知识点</div>'
+    : knowledge.slice(0,20).map((k,i)=>`
+      <div class="knowledge-item">
+        <span>${esc(k.text)}</span>
+        <span style="display:flex;align-items:center;gap:8px">
+          <span class="date">${k.date} ${k.time}</span>
+          <button class="del-btn" onclick="deleteKnowledge(${i})">×</button>
+        </span>
+      </div>`).join('');
+}
+
+function exportKnowledge() {
+  const el = document.getElementById('knowledgeExport');
+  el.style.display='block';
+  const byDate = {};
+  knowledge.forEach(k=>{ if(!byDate[k.date]) byDate[k.date]=[]; byDate[k.date].push(k.text); });
+  document.getElementById('knowledgeExportContent').innerHTML = Object.entries(byDate).sort((a,b)=>b[0].localeCompare(a[0])).map(([d,items])=>`
+    <div style="margin-bottom:12px">
+      <div style="font-weight:600;font-size:13px;margin-bottom:4px">📅 ${d}</div>
+      ${items.map(t=>`<div style="font-size:13px;padding:4px 0 4px 12px;border-left:2px solid #ddd;margin-bottom:4px">• ${esc(t)}</div>`).join('')}
+    </div>
+  `).join('') || '<div class="empty">还没有记录</div>';
+  el.scrollIntoView({behavior:'smooth'});
+}
+
+// ============ SPORT ============
+const sportVideos = [
+  { id:'s1', title:'躺着玩手机练出女团腿', up:'欧阳春晓Aurora', dur:'15min', url:'https://www.bilibili.com/video/BV1t5R2YHEPe/' },
+  { id:'s2', title:'沙漏腰3.0进阶', up:'欧阳春晓Aurora', dur:'30min', url:'https://www.bilibili.com/video/BV13DJVzsEkK/' },
+  { id:'s3', title:'轻松get直角肩+少女背', up:'欧阳春晓Aurora', dur:'10min', url:'https://www.bilibili.com/video/BV11rg5eqEoM/' },
+  { id:'s4', title:'20分钟无重复哑铃手臂+肩部紧致训练', up:'wishisnotfar', dur:'20min', url:'https://search.bilibili.com/all?keyword=wishisnotfar+20分钟+哑铃+手臂+肩部' },
+  { id:'s5', title:'10分钟高效瘦大腿', up:'韩小四April', dur:'10min', url:'https://www.bilibili.com/video/BV1UE411W7uo/' },
+];
+
+function renderSport() {
+  const td = today();
+  document.getElementById('sportDate').textContent = td;
+  const done = sportDone[td] || [];
+  document.getElementById('sportList').innerHTML = sportVideos.map(v=>{
+    const isDone = done.includes(v.id);
+    return `<div class="sport-video ${isDone?'done':''}">
+      <input type="checkbox" class="check" ${isDone?'checked':''} onchange="toggleSport('${v.id}')">
+      <div class="info"><div class="title">${v.title}</div><div class="up">${v.up} · ${v.dur}</div></div>
+      <a href="${v.url}" target="_blank" class="link-btn" onclick="event.stopPropagation()">▶ 打开</a>
+    </div>`;
+  }).join('');
+}
+
+function toggleSport(id) {
+  const td = today();
+  if(!sportDone[td]) sportDone[td]=[];
+  const idx = sportDone[td].indexOf(id);
+  if(idx>=0) sportDone[td].splice(idx,1);
+  else sportDone[td].push(id);
+  save('sportDone', sportDone);
+  renderSport();
+}
+
+// ============ ENGLISH ============
+const englishLessons = [
+  { title:'Friends · 老友记 S1E1 经典开头', source:'美剧片段', text:`Monica: There's nothing to tell! He's just some guy I work with!
+Joey: C'mon, you're going out with the guy. There's gotta be something wrong with him!
+Chandler: All right Joey, be nice. So does he have a hump? A hump and a hairpiece?`, vocab:'go out with = 和...约会 | gotta be = 肯定有 (got to be) | hump = 驼背 | hairpiece = 假发' },
+  { title:'TED · The Power of Vulnerability', source:'TED演讲', text:`"Vulnerability is the birthplace of innovation, creativity and change. To create is to make something that has never existed before. There's nothing more vulnerable than that." — Brené Brown`, vocab:'vulnerability = 脆弱性 | birthplace = 发源地 | innovation = 创新' },
+  { title:'Modern Family · 摩登家庭 经典台词', source:'美剧片段', text:`Phil: "When life gives you lemonade, make lemons. Life will be all like, 'What?!'"
+Claire: "I'm not a regular mom, I'm a cool mom."
+Gloria: "In my culture, we celebrate life. Every day is a gift."`, vocab:'lemonade = 柠檬水 | regular = 普通的 | culture = 文化 | celebrate = 庆祝' },
+  { title:'TED · How Great Leaders Inspire Action', source:'TED演讲', text:`"People don't buy what you do; they buy why you do it. And what you do simply proves what you believe." — Simon Sinek`, vocab:'simply = 仅仅 | prove = 证明 | believe = 相信' },
+  { title:'The Pursuit of Happyness · 当幸福来敲门', source:'电影片段', text:`"Don't ever let somebody tell you you can't do something. Not even me. You got a dream, you gotta protect it. People can't do something themselves, they wanna tell you you can't do it."`, vocab:'pursuit = 追求 | protect = 保护' },
+  { title:'BBC News · Daily English', source:'新闻片段', text:`"Good morning. Today's top story: Communities around the world are finding new ways to connect through art and culture. From street murals to online exhibitions, creativity is bringing people together in unexpected ways."`, vocab:'community = 社区 | connect = 连接 | mural = 壁画 | exhibition = 展览 | unexpected = 意想不到的' },
+  { title:'TED · The Happiness Advantage', source:'TED演讲', text:`"If you can raise somebody's level of positivity in the present, then their brain experiences what we now call a happiness advantage. Your brain at positive performs significantly better than at negative, neutral or stressed."`, vocab:'positivity = 积极性 | significantly = 显著地 | neutral = 中性的 | perform = 表现' },
+];
+
+function renderEnglish() {
+  const idx = new Date().getDate() % englishLessons.length;
+  const lesson = englishLessons[idx];
+  document.getElementById('englishContent').innerHTML = `
+    <div class="en-card">
+      <div class="en-title">${lesson.title}</div>
+      <div class="en-source">${lesson.source} · 今日推荐</div>
+      <div class="en-text">${lesson.text.replace(/\n/g,'<br>')}</div>
+      <div style="font-size:12px;color:var(--accent);margin:8px 0">🗣 大声朗读上面段落，练习发音和语感</div>
+      <div class="en-vocab"><b>📖 词解：</b><br>${lesson.vocab.replace(/\|/g,'<br>')}</div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>✏️ 口语练习笔记</h3>
+      <textarea class="review-input" id="engNote" placeholder="记录生词、发音难点、自己的朗读录音感受..."></textarea>
+      <button class="btn btn-dark btn-sm" onclick="saveEngNote()">保存笔记</button>
+      <div id="engNotes" style="margin-top:8px"></div>
+    </div>
+  `;
+  renderEngNotes();
+}
+
+function saveEngNote() {
+  const text = document.getElementById('engNote').value.trim();
+  if(!text) return;
+  const notes = load('engNotes', []);
+  notes.unshift({ date:today(), text });
+  save('engNotes', notes);
+  document.getElementById('engNote').value = '';
+  renderEngNotes();
+}
+
+function renderEngNotes() {
+  const notes = load('engNotes', []);
+  document.getElementById('engNotes').innerHTML = notes.slice(0,10).map((n,i)=>`
+    <div style="font-size:13px;padding:6px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between">
+      <span>${esc(n.text)}</span>
+      <span style="font-size:11px;color:var(--text3)">${n.date}</span>
+    </div>`).join('') || '<div class="empty">还没有笔记</div>';
+}
+
+// ============ KOREAN ============
+const koreanCourse = [
+  // 第1-2天：单元音
+  { day:1, title:'韩语40音 · 单元音（上）', sections:[
+    {h:'发音练习',type:'table',data:[
+      ['ㅏ','a','啊'],['ㅓ','eo','哦'],['ㅗ','o','欧'],['ㅑ','ya','呀'],['ㅕ','yeo','哟'],['ㅛ','yo','哟']
+    ],tip:'发音要点：嘴型自然放松，像说中文一样自然发出即可。每个音读10遍。'},
+  ]},
+  { day:2, title:'韩语40音 · 单元音（下）', sections:[
+    {h:'发音练习',type:'table',data:[
+      ['ㅜ','u','乌'],['ㅠ','yu','由'],['ㅡ','eu','呃'],['ㅣ','i','衣']
+    ],tip:'注意 ㅡ(eu) 的发音：嘴微张，舌面放平，像中文"饿"去声调'},
+  ]},
+  // 第3-4天：辅音
+  { day:3, title:'韩语40音 · 松音辅音', sections:[
+    {h:'松音',type:'table',data:[
+      ['ㄱ','g/k','哥'],['ㄴ','n','呢'],['ㄷ','d/t','的'],['ㄹ','r/l','了'],['ㅁ','m','么']
+    ],tip:'松音发音较轻，声带不振动。注意ㄹ在词首发颤音，词尾发l音。'},
+  ]},
+  { day:4, title:'韩语40音 · 松音+紧音辅音', sections:[
+    {h:'松音续',type:'table',data:[['ㅂ','b/p','波'],['ㅅ','s','斯'],['ㅇ','(silent)/ng','嗯'],['ㅈ','j','资'],['ㅎ','h','喝']]},
+    {h:'紧音',type:'table',data:[['ㄲ','kk','格'],['ㄸ','tt','德'],['ㅃ','pp','伯'],['ㅆ','ss','斯'],['ㅉ','jj','资']],tip:'紧音发音时喉咙收紧，用力迸出'},
+  ]},
+  // 第5-6天：送气音+复合元音
+  { day:5, title:'韩语40音 · 送气音+复合元音', sections:[
+    {h:'送气音',type:'table',data:[['ㅋ','k','克'],['ㅌ','t','特'],['ㅍ','p','坡'],['ㅊ','ch','此']]},
+    {h:'复合元音',type:'table',data:[['ㅐ','ae','哎'],['ㅔ','e','诶'],['ㅒ','yae','耶'],['ㅖ','ye','也'],['ㅘ','wa','哇'],['ㅝ','wo','窝']],tip:'送气音就是要有气出来，拿张纸放在嘴前，纸会动就对了'},
+  ]},
+  { day:6, title:'韩语40音 · 复合元音+韵尾', sections:[
+    {h:'复合元音续',type:'table',data:[['ㅙ','wae','歪'],['ㅞ','we','喂'],['ㅚ','oe','外'],['ㅟ','wi','为'],['ㅢ','ui','呃衣']]},
+    {h:'基础韵尾',type:'table',data:[['ㄱ','k','받침'],['ㄴ','n','안'],['ㄷ','t','곧'],['ㄹ','l','달'],['ㅁ','m','몸'],['ㅂ','p','밥'],['ㅇ','ng','강']],tip:'韵尾（받침）是韩语最独特的部分，发音时气流在嘴中截止'},
+  ]},
+  // 第7-8天：基础词汇
+  { day:7, title:'基础词汇 · 问候与数字', sections:[
+    {h:'日常问候',type:'list',data:[
+      ['안녕하세요','an-nyeong-ha-se-yo','你好'],
+      ['감사합니다','gam-sa-ham-ni-da','谢谢'],
+      ['죄송합니다','joe-song-ham-ni-da','对不起'],
+      ['안녕히 계세요','an-nyeong-hi gye-se-yo','再见（留下的人说）'],
+      ['안녕히 가세요','an-nyeong-hi ga-se-yo','再见（离开的人说）']
+    ]},
+    {h:'数字 1-10（韩语固有词）',type:'list',data:[
+      ['하나','ha-na','1'],['둘','dul','2'],['셋','set','3'],['넷','net','4'],['다섯','da-seot','5'],
+      ['여섯','yeo-seot','6'],['일곱','il-gop','7'],['여덟','yeo-deol','8'],['아홉','a-hop','9'],['열','yeol','10']
+    ],tip:'韩语有两套数字系统：固有词（数数量用）和汉字词（日期/钱用）。今天先记固有词。'},
+  ]},
+  { day:8, title:'基础词汇 · 人称与自我介绍', sections:[
+    {h:'人称',type:'list',data:[
+      ['저/나','jeo/na','我（敬语/平语）'],['너','neo','你'],['우리','u-ri','我们'],
+      ['그','geu','他'],['그녀','geu-nyeo','她']
+    ]},
+    {h:'自我介绍',type:'list',data:[
+      ['저는 ___입니다','jeo-neun ___ im-ni-da','我是___'],
+      ['중국 사람입니다','jung-guk sa-ram-im-ni-da','我是中国人'],
+      ['사진사입니다','sa-jin-sa-im-ni-da','我是摄影师'],
+      ['결혼식 사진을 찍습니다','gyeol-hon-sik sa-jin-eul jjik-seum-ni-da','我拍婚礼照片']
+    ],tip:'练习用韩语介绍自己：이름 + 직업 说出你的名字和职业'},
+  ]},
+  // 第9-10天：基础语法
+  { day:9, title:'基础语法 · 이에요/예요 + 主格助词', sections:[
+    {h:'句型',type:'text',content:'名词 + 이에요/예요 = "是..."\n有韵尾 + 이에요：학생이에요（是学生）\n无韵尾 + 예요：의사예요（是医生）\n\n主格助词 은/는：\n有韵尾 + 은：책은（书...）\n无韵尾 + 는：나는（我...）'},
+    {h:'练习',type:'list',data:[
+      ['저는 사진사예요','jeo-neun sa-jin-sa-ye-yo','我是摄影师'],
+      ['이것은 카메라예요','i-geo-seun ka-me-ra-ye-yo','这是相机'],
+      ['오늘은 좋은 날이에요','o-neu-reun jo-eun na-ri-e-yo','今天是个好日子']
+    ],tip:'试着造5个自己的句子！'},
+  ]},
+  { day:10, title:'基础语法 · 在哪里 + 想做什么', sections:[
+    {h:'句型',type:'text',content:'场所 + 에 있어요 = "在...（地方）"\n例：집에 있어요（在家）\n\n动词 + 고 싶어요 = "想..."\n가고 싶어요（想去）、먹고 싶어요（想吃）、배우고 싶어요（想学）'},
+    {h:'练习',type:'list',data:[
+      ['어디에 있어요?','eo-di-e i-sseo-yo?','在哪里？'],
+      ['카메라가 어디에 있어요?','ka-me-ra-ga eo-di-e i-sseo-yo?','相机在哪里？'],
+      ['한국어를 배우고 싶어요','han-gu-geo-reul bae-u-go si-peo-yo','我想学韩语'],
+      ['한국에 가고 싶어요','han-gu-ge ga-go si-peo-yo','我想去韩国']
+    ],tip:'每天用韩语自言自语一句，慢慢就自然了'},
+  ]},
+];
+
+// fill remaining days (11-30) with review/practice
+for(let d=11; d<=30; d++) {
+  const topics = [
+    {t:'词汇扩展 · 婚礼相关用语',s:[
+      {h:'婚礼词汇',type:'list',data:[
+        ['결혼식','gyeol-hon-sik','婚礼'],['신랑','sil-lang','新郎'],['신부','sin-bu','新娘'],
+        ['웨딩촬영','we-ding-chwal-yeong','婚纱摄影'],['예식장','ye-sik-jang','婚礼场地']
+      ]}
+    ]},
+    {t:'词汇扩展 · 摄影相关',s:[
+      {h:'摄影词汇',type:'list',data:[
+        ['사진','sa-jin','照片'],['카메라','ka-me-ra','相机'],['렌즈','ren-jeu','镜头'],
+        ['빛','bit','光'],['아름답다','a-reum-dap-da','美丽'],['순간','sun-gan','瞬间']
+      ]}
+    ]},
+    {t:'句型练习 · 过去时态',s:[
+      {h:'았/었어요',type:'text',content:'动词词干 + 았/었어요 = 过去式\n가다→갔어요（去了）\n먹다→먹었어요（吃了）\n보다→봤어요（看了）\n찍다→찍었어요（拍了）'},
+      {h:'练习',type:'list',data:[['사진을 찍었어요','sa-jin-eul jji-geo-sseo-yo','拍了照片'],['결혼식에 갔어요','gyeol-hon-si-ge ga-sseo-yo','去了婚礼']]}
+    ]},
+    {t:'句型练习 · 将来时态',s:[
+      {h:'을/ㄹ 거예요',type:'text',content:'动词词干 + 을/ㄹ 거예요 = 将来式\n할 거예요（会做）、갈 거예요（会去）、찍을 거예요（会拍）'},
+      {h:'练习',type:'list',data:[['내일 촬영할 거예요','nae-il chwal-yeong-hal geo-ye-yo','明天会拍摄'],['열심히 공부할 거예요','yeol-si-mi gong-bu-hal geo-ye-yo','会努力学习的']]}
+    ]},
+  ];
+  const t = topics[(d-11) % topics.length];
+  koreanCourse.push({ day:d, title:t.t, sections:t.s });
+}
+
+function renderKorean() {
+  const container = document.getElementById('krProgress');
+  container.innerHTML = '';
+  for(let d=1; d<=30; d++) {
+    const div = document.createElement('div');
+    div.className = 'kr-day';
+    if(koreanDoneDays.includes(d)) div.classList.add('done');
+    if(d===koreanDay) div.classList.add('current');
+    div.textContent = d;
+    div.addEventListener('click', ()=>{ koreanDay=d; renderKorean(); });
+    container.appendChild(div);
+  }
+
+  const lesson = koreanCourse.find(l=>l.day===koreanDay) || koreanCourse[0];
+  document.getElementById('krContent').innerHTML = `
+    <div class="kr-title">第${lesson.day}天 · ${lesson.title}</div>
+    ${(lesson.sections||[]).map(s=>{
+      if(s.type==='table') return `
+        <div class="kr-section">
+          <h4>${s.h||''}</h4>
+          <div class="kr-table">${(s.data||[]).map(c=>`<div class="kr-cell"><div class="ko">${c[0]}</div><div class="rom">${c[1]}</div><div style="font-size:11px;color:var(--text2)">${c[2]}</div></div>`).join('')}</div>
+          ${s.tip?`<div style="font-size:12px;color:var(--text2);margin-top:8px">💡 ${s.tip}</div>`:''}
+        </div>`;
+      if(s.type==='list') return `
+        <div class="kr-section">
+          <h4>${s.h||''}</h4>
+          ${(s.data||[]).map(c=>`<div style="padding:6px 0;border-bottom:1px solid #eee;font-size:13px"><b>${c[0]}</b> <span style="color:var(--text2)">[${c[1]}]</span> — ${c[2]}</div>`).join('')}
+          ${s.tip?`<div style="font-size:12px;color:var(--text2);margin-top:8px">💡 ${s.tip}</div>`:''}
+        </div>`;
+      if(s.type==='text') return `
+        <div class="kr-section">
+          <h4>${s.h||''}</h4>
+          <div style="font-size:13px;line-height:1.8;white-space:pre-line">${s.content||''}</div>
+        </div>`;
+      return '';
+    }).join('')}
+  `;
+
+  document.getElementById('krPrevBtn').style.visibility = koreanDay>1 ? 'visible':'hidden';
+  document.getElementById('krNextBtn').style.visibility = koreanDay<30 ? 'visible':'hidden';
+}
+
+function markKoreanDone() {
+  if(!koreanDoneDays.includes(koreanDay)) {
+    koreanDoneDays.push(koreanDay);
+    save('koreanDoneDays', koreanDoneDays);
+  }
+  save('koreanDay', koreanDay);
+  renderKorean();
+}
+
+function krPrevDay() { if(koreanDay>1){ koreanDay--; save('koreanDay',koreanDay); renderKorean(); } }
+function krNextDay() { if(koreanDay<30){ koreanDay++; save('koreanDay',koreanDay); renderKorean(); } }
+
+// ============ INSPIRATION ============
+const weddingInspos = [
+  { platform:'抖音', title:'婚礼当天新娘的第一视角vlog', why:'婚礼vlog是抖音持续爆款赛道，第一视角更有代入感，婚礼跟拍摄影师天然有素材优势', angle:'以摄影师视角记录新娘从化妆到仪式全程，插入"摄影师眼中的最美瞬间"对比', dy:'新娘的一天｜原来在摄影师眼里我长这样', xhs:'婚礼当天第一视角｜摄影师镜头下的我vs我眼中的自己', script:'1. 新娘化妆间特写 → 2. 新郎接亲反应 → 3. 仪式交接瞬间 → 4. 抓拍花絮混剪 → BGM：温柔钢琴曲' },
+  { platform:'小红书', title:'备婚攻略·摄影师教你选跟拍', why:'备婚类内容在小红书搜索量极大，"避坑"类内容互动率高', angle:'以专业摄影师角度分享选跟拍的5个关键点，展示自己作品作为范例', dy:'选婚礼跟拍前一定要知道的5件事', xhs:'拍了300场婚礼的摄影师｜选跟拍就看这几点', script:'1. 作品集怎么看（原片vs精修） → 2. 沟通话术怎么问 → 3. 合同避坑 → 4. 时间线安排 → 结尾：自己作品展示' },
+  { platform:'抖音', title:'婚礼感人瞬间合集·催泪向', why:'情感类内容在抖音传播力极强，婚礼天生自带情感共鸣', angle:'整理自己拍摄的婚礼感人画面（父母送别、誓言、first look），配深情文案', dy:'拍了500场婚礼，这些瞬间让我哭了一次又一次', xhs:'婚礼最催泪的10个瞬间｜摄影师的泪点记录', script:'慢镜头+黑白过渡+钢琴BGM → 每个画面配一句话文案 → 结尾留白3秒' },
+  { platform:'小红书', title:'婚礼胶片感调色教程', why:'调色教程是摄影类账号涨粉利器，收藏率极高', angle:'分享婚礼跟拍后期调色思路，附LR预设参数', dy:'婚礼胶片感调色｜一键出片参数分享', xhs:'婚礼调色｜电影感胶片色调参数大公开', script:'原片vs调色对比 → 分步骤讲解 → 参数展示 → 号召保存/点赞' },
+  { platform:'抖音', title:'摄影师工作花絮·搞笑向', why:'幕后花絮人设感强，轻松有趣容易涨粉', angle:'记录拍摄婚礼过程中的搞笑/翻车/感动片段，展示真实工作状态', dy:'婚礼摄影师的工作日常…懂的都懂', xhs:'当婚礼摄影师是一种什么体验｜工作花絮', script:'快节奏剪辑+搞笑音效 → 多场景切换（扛设备/趴地上/抢机位）→ 结尾反转感人' },
+  { platform:'小红书', title:'成都婚礼场地推荐·摄影师视角', why:'本地化内容搜索精准，"成都婚礼"是高频搜索词', angle:'从摄影师角度推荐成都适合拍照的婚礼场地，附实拍图', dy:'成都最适合拍照的婚礼场地TOP5', xhs:'成都婚礼场地｜摄影师私藏的5个出片圣地', script:'每个场地：全景+细节+新人实拍 → 标注光线时间 → 优缺点点评' },
+];
+
+function renderInspiration() {
+  document.getElementById('inspoDate').textContent = today();
+  const idx = new Date().getDate() % weddingInspos.length;
+  const inspo = weddingInspos[idx];
+  document.getElementById('inspoList').innerHTML = `
+    <div class="inspo-card">
+      <div class="platform">📱 ${inspo.platform} 热门选题</div>
+      <div style="font-weight:600;font-size:15px;margin:4px 0">${inspo.title}</div>
+      <div class="why">🎯 为什么适合你二创：${inspo.why}</div>
+      <div class="angle">💡 改编角度：${inspo.angle}</div>
+      <div style="margin-top:8px">
+        <span class="title-dy">🎵 抖音标题：${inspo.dy}</span>
+        <span class="title-xhs">📕 小红书标题：${inspo.xhs}</span>
+      </div>
+      <div class="script">🎬 拍摄方式/简易脚本：${inspo.script}</div>
+    </div>
+    <div style="font-size:12px;color:var(--text3);margin-top:8px">每日轮换不同选题方向，明天自动刷新</div>
+  `;
+  renderInspoNotes();
+}
+
+function saveInspoNote() {
+  const text = document.getElementById('inspoNote').value.trim();
+  if(!text) return;
+  inspoNotes.unshift({ date:today(), text });
+  save('inspoNotes', inspoNotes);
+  document.getElementById('inspoNote').value = '';
+  renderInspoNotes();
+}
+
+function renderInspoNotes() {
+  document.getElementById('inspoNotes').innerHTML = inspoNotes.slice(0,10).map((n,i)=>`
+    <div style="font-size:13px;padding:8px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between">
+      <span>💡 ${esc(n.text)}</span>
+      <span style="font-size:11px;color:var(--text3);white-space:nowrap;margin-left:8px">${n.date}</span>
+    </div>`).join('') || '<div class="empty">还没有灵感笔记</div>';
+}
+
+// ============ HOTSPOT ============
+const hotspots = [
+  { tag:'#婚礼跟拍', trend:'持续热门', desc:'抖音婚礼跟拍话题播放量持续增长，适合发布作品时带上', idea:'发布今日拍摄精选片段，加话题#婚礼跟拍 #成都婚礼跟拍 #真实婚礼' },
+  { tag:'#氛围感', trend:'上升中', desc:'小红书"氛围感"相关笔记互动率高，婚礼照片天然适合', idea:'挑选一组光影感强的婚礼照片，配"氛围感婚礼"文案发小红书' },
+  { tag:'#备婚日记', trend:'常青话题', desc:'小红书核心婚礼话题，搜索量大、长尾流量好', idea:'以摄影师角度写"拍过300场婚礼总结的备婚建议"，配图用自己作品' },
+  { tag:'#电影感', trend:'热门', desc:'电影感调色/构图是今年摄影赛道流量密码', idea:'选出电影感最强的婚礼照片，做一组16:9横构图调色对比' },
+];
+
+function renderHotspot() {
+  document.getElementById('hotspotList').innerHTML = hotspots.map(h=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h3 style="margin:0">${h.tag}</h3>
+        <span style="font-size:12px;background:${h.trend==='上升中'?'#e74c3c':h.trend==='热门'?'#f39c12':'#27ae60'};color:#fff;padding:2px 8px;border-radius:10px">${h.trend}</span>
+      </div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:8px">${h.desc}</p>
+      <div style="font-size:13px;background:#fafafa;padding:10px;border-radius:8px">
+        <b>💡 二创建议：</b>${h.idea}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============ REVIEW ============
+function saveReview() {
+  const text = document.getElementById('reviewInput').value.trim();
+  if(!text) return;
+  reviews.unshift({ date:today(), time:now(), text });
+  save('reviews', reviews);
+  document.getElementById('reviewInput').value = '';
+  renderReview();
+}
+
+function renderReview() {
+  document.getElementById('reviewList').innerHTML = reviews.length===0
+    ? '<div class="empty">开始第一次复盘吧</div>'
+    : reviews.map(r=>`
+      <div class="review-item">
+        <div class="rv-date">${r.date} ${r.time}</div>
+        <div class="rv-content">${esc(r.text).replace(/\n/g,'<br>')}</div>
+      </div>`).join('');
+}
+
+// ============ UTILS ============
+function esc(s) {
+  const d=document.createElement('div'); d.textContent=s; return d.innerHTML;
+}
+
+// ============ INFJ CORNER ============
+let infjData = load('infj', { insights:[], travel:[], todo:[] });
+let infjCurrentType = 'insight';
+
+function openInfjModal(type) {
+  infjCurrentType = type;
+  const titles = { insight:'💡 添加醍醐灌顶', travel:'🌍 添加想去的地方', todo:'🎯 添加想做的事' };
+  document.getElementById('infjModalTitle').textContent = titles[type];
+  document.getElementById('infjInput').value = '';
+  document.getElementById('infjModal').classList.add('show');
+}
+
+function closeInfjModal() {
+  document.getElementById('infjModal').classList.remove('show');
+}
+
+function addInfj() {
+  const text = document.getElementById('infjInput').value.trim();
+  if(!text) return;
+  infjData[infjCurrentType].unshift({ date:today(), text });
+  save('infj', infjData);
+  closeInfjModal();
+  renderInfj();
+}
+
+function deleteInfj(type, idx) {
+  infjData[type].splice(idx, 1);
+  save('infj', infjData);
+  renderInfj();
+}
+
+function renderInfj() {
+  const renderSection = (id, data, emptyMsg) => {
+    document.getElementById(id).innerHTML = data.length===0
+      ? `<div class="empty">${emptyMsg}</div>`
+      : data.map((item, i)=>`
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f0f0">
+          <div style="flex:1">
+            <div style="font-size:13px;line-height:1.6">${esc(item.text)}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">${item.date}</div>
+          </div>
+          <button class="del-btn" onclick="deleteInfj('${id==='infjInsights'?'insights':id==='infjTravel'?'travel':'todo'}',${i})">×</button>
+        </div>`).join('');
+  };
+  renderSection('infjInsights', infjData.insights, '记录那些让你豁然开朗的瞬间');
+  renderSection('infjTravel', infjData.travel, '世界那么大，都想去看看');
+  renderSection('infjTodos', infjData.todo, '列下你想达成的事情');
+}
+
+// ============ INIT ============
+renderPlan();
+renderReview();
+renderEnglish();
+renderKorean();
+renderInfj();
+</script>
+</body>
+</html>
